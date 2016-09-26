@@ -36,4 +36,18 @@ public struct Vector2I
     {
         return !(a == b);
     }
+
+    public static Vector2I operator *(Vector2I v, int scalar)
+    {
+        v.x *= scalar;
+        v.y *= scalar;
+        return v;
+    }
+
+    public static Vector2I operator /(Vector2I v, int scalar)
+    {
+        v.x /= scalar;
+        v.y /= scalar;
+        return v;
+    }
 }

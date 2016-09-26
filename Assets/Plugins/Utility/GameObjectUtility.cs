@@ -53,27 +53,6 @@ public static class GameObjectUtility
     #endregion
 
 
-    #region Show
-
-
-    public static void ShowGameObject(GameObject go, bool show)
-    {
-        Debug.Assert(go, go);
-
-        go.SetActive(show);
-    }
-
-    public static void ToggleGameObject(GameObject go)
-    {
-        Debug.Assert(go, go);
-
-        go.SetActive(!go.activeSelf);
-    }
-
-
-    #endregion
-
-
     #region Transform
 
 
