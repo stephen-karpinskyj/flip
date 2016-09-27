@@ -203,9 +203,9 @@ MonoBehaviour:
   numDecimal: 1
   yellowFps: 50
   greenFps: 60
-  redColor: {r: 1, g: 1, b: 1, a: 0.5019608}
-  yellowColor: {r: 1, g: 1, b: 1, a: 0.5019608}
-  greenColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+  redColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+  yellowColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+  greenColor: {r: 0, g: 0, b: 0, a: 0.5019608}
 --- !u!114 &114000010967074262
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -414,7 +414,7 @@ Canvas:
   m_GameObject: {fileID: 1000011319795022}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 20000012580319362}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

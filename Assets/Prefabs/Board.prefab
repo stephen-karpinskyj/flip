@@ -52,9 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions:
-    x: 5
-    y: 9
-  tilePrefab: {fileID: 114000013159869624, guid: 29c1c3c2333684e0fbaeee0211e8779b,
-    type: 2}
-  facePrefab: {fileID: 114000013529441984, guid: e764f518841604616a259c3d68acd110,
+    x: 7
+    y: 13
+  tilePrefab: {fileID: 114000012135543676, guid: efbd8c4154ba443eba389bfacb1a3b06,
     type: 2}
