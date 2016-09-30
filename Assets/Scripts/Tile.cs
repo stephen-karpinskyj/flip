@@ -3,29 +3,23 @@
 public class Tile : BaseMonoBehaviour
 {
     [SerializeField]
-    private Renderer backingRenderer;
+    private TileHighlightable backing;
 
     [SerializeField]
-    private Color pressedColor = Color.red;
+    private TileHighlightable border;
 
-    private Color defaultColor;
-    private bool isPressed;
-
-    protected override void Awake()
+    public TileHighlightable Backing
     {
-        base.Awake();
+        get { return this.backing; }
+    }
 
-        this.defaultColor = this.backingRenderer.material.color;
+    public TileHighlightable Border
+    {
+        get { return this.border; }
     }
 
     public void SetPosition(Vector2 position)
     {
         this.transform.localPosition = position;
-    }
-
-    public void OnMouseDown()
-    {
-        this.isPressed = !this.isPressed;
-        this.backingRenderer.material.color = this.isPressed ? this.pressedColor : this.defaultColor;
     }
 }
