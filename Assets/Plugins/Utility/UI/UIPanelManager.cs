@@ -9,12 +9,8 @@ public class UIPanelManager : BehaviourSingleton<UIPanelManager>
     private List<Transform> originalChildren = new List<Transform>();
     private RectTransform rectTransform;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
-        instance = this;
-
         this.GetComponentsInChildren<Transform>(this.originalChildren);
         this.rectTransform = this.GetComponent<RectTransform>();
     }

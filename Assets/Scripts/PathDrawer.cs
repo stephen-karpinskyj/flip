@@ -1,126 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class PathDrawer
 {
-    private bool wasDown;
-    private bool isDrawingPath;
+    private Tile lastPressedTile;
+    private Tile currentPressedTile;
 
+    public readonly TilePath Path = new TilePath();
     public Tile AllowedStartingTile { get; set; }
 
-    private List<Tile> path = new List<Tile>();
-    private Tile lastTile;
-
-    public IEnumerable<Tile> CurrentPath
-    {
-        get { return this.path; }
-    }
-
-    public void CheckForInput()
+    public void CheckInput()
     {
         var isDown = Input.anyKey;
-        var onDown = isDown && !wasDown;
-        var onUp = !isDown && this.wasDown;
-        this.wasDown = isDown;
 
-        var tile = Board.Instance.GetTile(Input.mousePosition);
-
-        if (onDown)
+        if (isDown)
         {
-            if (tile == this.AllowedStartingTile)
+            this.currentPressedTile = Board.Instance.GetTile(Input.mousePosition);
+            var pressingLastTile = this.currentPressedTile != this.lastPressedTile;
+
+            if (!pressingLastTile)
             {
-                this.OnStartDrawing(tile);
-            }
-            else
-            {
-                this.OnEndDrawing(tile);
-            }
-        }
-        else if (onUp)
-        {
-            this.OnEndDrawing(tile);
-        }
-        else if (isDown)
-        {
-            this.OnContinueDrawing(tile);
-        }
+                var pressingStartTile = this.currentPressedTile == this.AllowedStartingTile;
 
-        Board.Instance.ForEachTile(t => t.Border.Highlight(this.path.Contains(t)));
-    }
-
-    private void OnStartDrawing(Tile tile)
-    {
-        if (this.isDrawingPath)
-        {
-            return;
-        }
-
-        this.isDrawingPath = true;
-
-        this.path.Clear();
-        this.AddTileToPath(tile);
-    }
-
-    private void OnContinueDrawing(Tile tile)
-    {
-        if (!this.isDrawingPath)
-        {
-            return;
-        }
-
-        var hasChangedTile = tile != this.lastTile;
-
-        if (tile == null || (hasChangedTile && this.path.Contains(tile)))
-        {
-            this.OnEndDrawing(tile);
-        }
-        else
-        {
-            var nextPathSection = Board.Instance.Pathfind(lastTile, tile);
-            foreach (var nextTile in nextPathSection)
-            {
-                if (nextTile == lastTile)
+                if (pressingStartTile)
                 {
-                    continue;
+                    this.Path.Clear();
                 }
 
-                this.AddTileToPath(nextTile);
+                if (this.Path.IsClear())
+                {
+                    this.Path.PushTile(this.AllowedStartingTile);
+                }
+
+                this.Path.PushTile(this.currentPressedTile);
             }
         }
-    }
 
-    private void OnEndDrawing(Tile tile)
-    {
-        if (!this.isDrawingPath)
+        this.lastPressedTile = isDown ? this.currentPressedTile : null;
+
+        Board.Instance.ForEachTile(t =>
         {
-            return;
-        }
+            var shouldHighlight = this.Path.Contains(t);
 
-        this.isDrawingPath = false;
+            if (shouldHighlight != t.Backing.IsHighlighted)
+            {
+                t.Punch();
+            }
 
-        if (this.lastTile != tile && tile != null)
-        {
-            this.AddTileToPath(tile);
-        }
-    }
-
-    private void AddTileToPath(Tile tile)
-    {
-        this.path.Add(tile);
-        this.lastTile = tile;
-    }
-
-    public Tile PopFirstTile()
-    {
-        if (this.path.Count <= 0)
-        {
-            return null;
-        }
-
-        var first = this.path[0];
-        this.path.RemoveAt(0);
-        return first;
+            t.Backing.Highlight(shouldHighlight);
+        });
     }
 }

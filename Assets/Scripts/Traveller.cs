@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using DG.Tweening;
 
 public class Traveller : BaseMonoBehaviour
 {
-    [SerializeField]
-    private int bpm = 115;
-
     [SerializeField]
     private float moveDuration = 0.05f;
 
@@ -13,76 +10,34 @@ public class Traveller : BaseMonoBehaviour
     private Vector2I initialCoords;
 
     [SerializeField]
-    private TravellerFlasher flasher;
+    private ColorTweener centreColourTweener;
 
     [SerializeField]
-    private TravellerFlasher mainFlasher;
+    private PunchTweenerData punchTweenerData;
 
     private PathDrawer pathDrawer = new PathDrawer();
 
     private Tile currentTile;
+    private BoardDirection currentDir;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        this.currentTile = Board.Instance.GetTile(this.initialCoords);
-        this.pathDrawer.AllowedStartingTile = this.currentTile;
-    }
-
-    private IEnumerator Start()
+    private void Start()
     {   
+        var initialTile = Board.Instance.GetTile(this.initialCoords);
+        this.ChangeTile(initialTile);
+
         this.UpdatePosition();
 
-        var beatDelay = this.bpm / 60f / 4f;
-        var numBeat = 0;
-
-        while (true)
+        MusicManager.Instance.OnDrumsEvent += koreoEvent =>
         {
-            if (numBeat % 4 == 0)
-            {
-                this.mainFlasher.Flash();
-            }
-            else
-            {
-                this.flasher.Flash();
-            }
-
+            //this.centreColourTweener.PlayInOut();
             this.StepMovement();
-
-            numBeat++;
-
-            yield return new WaitForSeconds(beatDelay);
-        }
+            this.transform.DOPunchScale(this.punchTweenerData);
+        };
     }
 
     private void Update()
     {
-        this.pathDrawer.CheckForInput();
-    }
-
-    private IEnumerator LerpToNextTile(Tile nextTile)
-    {
-        var startTime = Time.time;
-
-        var prevTile = this.currentTile;
-        this.currentTile = nextTile;
-        this.pathDrawer.AllowedStartingTile = this.currentTile;
-
-        while (true)
-        {
-            var t = (Time.time - startTime) / this.moveDuration;
-            this.transform.position = Vector3.Lerp(prevTile.transform.position, this.currentTile.transform.position, t);
-
-            if (t >= 1f)
-            {
-                break;
-            }
-
-            yield return null;
-        }
-
-        this.UpdatePosition();
+        this.pathDrawer.CheckInput();
     }
 
     private void UpdatePosition()
@@ -90,15 +45,58 @@ public class Traveller : BaseMonoBehaviour
         this.transform.position = this.currentTile.transform.position;
     }
 
-    private void StepMovement()
+    private void UpdateRotation()
     {
-        var nextTile = this.pathDrawer.PopFirstTile();
+        this.transform.eulerAngles = this.CalculateRotation();
+    }
+
+    private Vector3 CalculateRotation()
+    {
+        var angle = BoardDirection.Default().Value.SignedAngle(this.currentDir.Value);
+        return Vector3.forward * angle;
+    }
+
+    // TODO: If no path, move in non-180 to last move
+    // TODO: If path, move in non-180 from last tile (if not in same axis)
+
+    private bool StepMovement()
+    {
+        var nextTile = this.pathDrawer.Path.PopFirstTile();
 
         if (nextTile == null)
         {
-            return;
+            return false;
         }
 
-        this.StartCoroutine(this.LerpToNextTile(nextTile));
+        this.ChangeTile(nextTile);
+
+        this.transform.DORotate(this.CalculateRotation(), this.moveDuration);
+        var tween = this.transform.DOMove(nextTile.transform.position, this.moveDuration);
+        tween.OnComplete(() =>
+        {
+            this.UpdatePosition();
+            this.UpdateRotation();
+        });
+
+        return true;
+    }
+
+    private void ChangeTile(Tile tile)
+    {
+        if (this.currentTile == null)
+        {
+            this.currentDir.SetDefault();
+        }
+        else if (this.currentTile == tile)
+        {
+            this.currentDir.Set(this.currentTile, this.pathDrawer.Path.PeekFirstTile());
+        }
+        else
+        {
+            this.currentDir.Set(this.currentTile, tile);
+        }
+
+        this.currentTile = tile;
+        this.pathDrawer.AllowedStartingTile = tile;
     }
 }

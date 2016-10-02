@@ -10,10 +10,15 @@ public abstract class BehaviourSingleton<T> : BaseMonoBehaviour where T : MonoBe
         {
             if (!instance)
             {
-                instance = GameObjectUtility.InstantiateComponent<T>();
+                instance = Object.FindObjectOfType<T>();
+
+                if (instance == null)
+                {
+                    instance = GameObjectUtility.InstantiateComponent<T>();
+                }
+
                 Debug.Assert(instance != null, instance);
-                
-                Object.DontDestroyOnLoad(instance);
+                //Object.DontDestroyOnLoad(instance);
             }
 
             return instance;

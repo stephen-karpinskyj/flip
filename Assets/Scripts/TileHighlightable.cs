@@ -10,23 +10,21 @@ public class TileHighlightable : BaseMonoBehaviour
 
     private Color defaultColor;
 
-    private bool isHighlighted;
+    public bool IsHighlighted { get; private set; }
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         this.defaultColor = this.rend.material.color;
     }
 
     public void Highlight(bool highlight)
     {
-        if (highlight == this.isHighlighted)
+        if (highlight == this.IsHighlighted)
         {
             return;
         }
 
-        this.isHighlighted = highlight;
+        this.IsHighlighted = highlight;
         this.rend.material.color = highlight ? this.highlightedColor : this.defaultColor;
     }
 }

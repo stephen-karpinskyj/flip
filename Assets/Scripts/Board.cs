@@ -17,18 +17,9 @@ public class Board : BehaviourSingleton<Board>
 
     private Tile[,] tiles;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
-        instance = this;
-
         this.InitialiseTiles();
-    }
-
-    private void Start()
-    {
-        GameObjectUtility.InstantiatePrefab(this.travellerPrefab, this.transform);
     }
 
     private void InitialiseTiles()
@@ -48,6 +39,8 @@ public class Board : BehaviourSingleton<Board>
 
                 this.tiles[x, y] = tile;
 
+                tile.Coordinates = new Vector2I(x, y);
+
                 var position = new Vector2(x + this.bottomLeft.x, y + this.bottomLeft.y);
                 tile.SetPosition(position);
             }
@@ -56,19 +49,32 @@ public class Board : BehaviourSingleton<Board>
         Camera.main.orthographicSize = this.dimensions.x + 0.2f;
     }
 
-    public List<Tile> Pathfind(Tile a, Tile b)
+    public List<Tile> Pathfind(Tile a, Tile b, Tile fromDirectionTile = null)
     {
         var path = new List<Tile> { a };
 
-        var curr = a;
+        var bCoords = b.Coordinates;
+        var aCoords = a.Coordinates;
 
-        var bCoords = this.tiles.CoordinatesOf(b);
+        var fromDirCoords = this.tiles.CoordinatesOf(fromDirectionTile);
+        var xFirst = fromDirectionTile == null || Mathf.Approximately(Mathf.Sign(aCoords.x - fromDirCoords.x), Mathf.Sign(bCoords.x - aCoords.x));
+
+        var curr = a;
 
         while (curr != b)
         {
-            var currCoords = this.GetCoordinates(curr);
+            var currCoords = curr.Coordinates;
 
-            if (currCoords.x != bCoords.x)
+            if (currCoords.x == bCoords.x)
+            {
+                xFirst = false;
+            }
+            else
+            {
+                xFirst |= currCoords.y == bCoords.y;
+            }
+
+            if (xFirst && currCoords.x != bCoords.x)
             {
                 currCoords.x += Mathf.RoundToInt(Mathf.Sign(bCoords.x - currCoords.x));
             }
@@ -93,22 +99,10 @@ public class Board : BehaviourSingleton<Board>
         return this.GetTile(coords);
     }
 
-    public Vector2I GetCoordinates(Tile tile)
-    {
-        return this.tiles.CoordinatesOf(tile);
-    }
-
     public Tile GetTile(Vector2I coords)
     {
-        if (coords.x < 0 || coords.x >= this.tiles.GetLength(0))
-        {
-            return null;
-        }
-
-        if (coords.y < 0 || coords.y >= this.tiles.GetLength(1))
-        {
-            return null;
-        }
+        coords.x = Mathf.Clamp(coords.x, 0, this.tiles.GetLength(0) - 1);
+        coords.y = Mathf.Clamp(coords.y, 0, this.tiles.GetLength(1) - 1);
         
         return this.tiles[coords.x, coords.y];
     }
