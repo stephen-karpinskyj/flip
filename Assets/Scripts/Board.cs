@@ -49,15 +49,14 @@ public class Board : BehaviourSingleton<Board>
         Camera.main.orthographicSize = this.dimensions.x + 0.2f;
     }
 
-    public List<Tile> Pathfind(Tile a, Tile b, Tile fromDirectionTile = null)
+    public List<Tile> Pathfind(Tile a, Tile b, BoardDirection inDirection)
     {
         var path = new List<Tile> { a };
 
         var bCoords = b.Coordinates;
         var aCoords = a.Coordinates;
 
-        var fromDirCoords = this.tiles.CoordinatesOf(fromDirectionTile);
-        var xFirst = fromDirectionTile == null || Mathf.Approximately(Mathf.Sign(aCoords.x - fromDirCoords.x), Mathf.Sign(bCoords.x - aCoords.x));
+        var xFirst = !Mathf.Approximately(inDirection.Value.x, 0);
 
         var curr = a;
 

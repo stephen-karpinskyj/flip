@@ -9,6 +9,7 @@ public class PathDrawer
 
     public readonly TilePath Path = new TilePath();
     public Tile AllowedStartingTile { get; set; }
+    public BoardDirection StartingDirection { get; set; }
 
     public void CheckInput()
     {
@@ -17,7 +18,7 @@ public class PathDrawer
         if (isDown)
         {
             this.currentPressedTile = Board.Instance.GetTile(Input.mousePosition);
-            var pressingLastTile = this.currentPressedTile != this.lastPressedTile;
+            var pressingLastTile = this.currentPressedTile == this.lastPressedTile;
 
             if (!pressingLastTile)
             {
@@ -28,12 +29,23 @@ public class PathDrawer
                     this.Path.Clear();
                 }
 
+                var lastTile = this.AllowedStartingTile;
+                var inDirection = this.StartingDirection;
+                var fromDirection = inDirection;
+
                 if (this.Path.IsClear())
                 {
-                    this.Path.PushTile(this.AllowedStartingTile);
+                    this.Path.PushTile(this.AllowedStartingTile, null, inDirection);
+                }
+                else
+                {
+                    // Change from direction to be from end of drawn path
+                    lastTile = this.Path.PeekLastTile();
+                    fromDirection.Set(this.Path.PeekSecondLastTile(), lastTile);
                 }
 
-                this.Path.PushTile(this.currentPressedTile);
+                inDirection.Set(lastTile, this.currentPressedTile, fromDirection);
+                this.Path.PushTile(this.currentPressedTile, this.AllowedStartingTile, inDirection);
             }
         }
 
@@ -47,6 +59,8 @@ public class PathDrawer
             {
                 t.Punch();
             }
+
+            //t.Border.Highlight(t == this.AllowedStartingTile);
 
             t.Backing.Highlight(shouldHighlight);
         });

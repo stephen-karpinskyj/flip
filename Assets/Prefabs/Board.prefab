@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions:
     x: 5
-    y: 10
+    y: 9
   tilePrefab: {fileID: 114000012135543676, guid: efbd8c4154ba443eba389bfacb1a3b06,
     type: 2}
   travellerPrefab: {fileID: 114000012277045022, guid: 5090aa525ab9e4f4a90c3a989143c7ae,

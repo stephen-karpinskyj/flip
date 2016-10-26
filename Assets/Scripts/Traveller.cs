@@ -56,9 +56,6 @@ public class Traveller : BaseMonoBehaviour
         return Vector3.forward * angle;
     }
 
-    // TODO: If no path, move in non-180 to last move
-    // TODO: If path, move in non-180 from last tile (if not in same axis)
-
     private bool StepMovement()
     {
         var nextTile = this.pathDrawer.Path.PopFirstTile();
@@ -98,5 +95,6 @@ public class Traveller : BaseMonoBehaviour
 
         this.currentTile = tile;
         this.pathDrawer.AllowedStartingTile = tile;
+        this.pathDrawer.StartingDirection = this.currentDir;
     }
 }

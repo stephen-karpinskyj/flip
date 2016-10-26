@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class TilePath
 {
     private List<Tile> tiles = new List<Tile>();
-    private Tile lastPushedTile;
 
     public bool IsClear()
     {
@@ -15,7 +14,6 @@ public class TilePath
     public void Clear()
     {
         this.tiles.Clear();
-        this.lastPushedTile = null;
     }
 
     public bool Contains(Tile tile)
@@ -23,35 +21,31 @@ public class TilePath
         return tile != null && this.tiles.Contains(tile);
     }
 
-    public bool PushTile(Tile tile)
+    public void PushTile(Tile tile, Tile tileToClearOn, BoardDirection inDirection)
     {
         if (!this.IsValidTile(tile))
         {
-            return false;
+            return;
         }
+
+        var lastTile = this.PeekLastTile();
 
         // First tile
-        if (this.lastPushedTile == null)
+        if (lastTile == null)
         {
-            this.AddTile(tile);
-            return true;
+            this.AddTile(tile, tileToClearOn);
+            return;
         }
 
-        var pushedAnyTiles = false;
-
-        var secondLastTile = this.tiles.Count > 1 ? this.tiles[this.tiles.Count - 2] : null;
-        var nextSection = Board.Instance.Pathfind(this.lastPushedTile, tile, secondLastTile);
+        var nextSection = Board.Instance.Pathfind(lastTile, tile, inDirection);
 
         foreach (var nextTile in nextSection)
         {
             if (this.IsValidTile(nextTile))
             {
-                this.AddTile(nextTile);
-                pushedAnyTiles = true;
+                this.AddTile(nextTile, tileToClearOn);
             }
         }
-
-        return pushedAnyTiles;
     }
 
     public Tile PopFirstTile()
@@ -61,13 +55,8 @@ public class TilePath
             return null;
         }
 
-        var first = this.tiles[0];
+        var first = this.PeekFirstTile();
         this.tiles.RemoveAt(0);
-
-        if (this.tiles.Count <= 0)
-        {
-            this.lastPushedTile = null;
-        }
 
         return first;
     }
@@ -77,15 +66,29 @@ public class TilePath
         return this.tiles.Count <= 0 ? null : this.tiles[0];
     }
 
-    private void AddTile(Tile tile)
+    public Tile PeekLastTile()
+    {
+        return this.tiles.Count <= 0 ? null : this.tiles[this.tiles.Count - 1];
+    }
+
+    public Tile PeekSecondLastTile()
+    {
+        return this.tiles.Count <= 1 ? null : this.tiles[this.tiles.Count - 2];
+    }
+
+    private void AddTile(Tile tile, Tile tileToClearOn)
     {
         if (this.Contains(tile))
         {
             this.TrimToTile(tile);
         }
 
+        if (tile == tileToClearOn)
+        {
+            this.Clear();
+        }
+
         this.tiles.Add(tile);
-        this.lastPushedTile = tile;
     }
 
     private void TrimToTile(Tile tile)
@@ -101,12 +104,11 @@ public class TilePath
         if (startTrimIndex >= 0 && countToTrim > 0)
         {
             this.tiles.RemoveRange(startTrimIndex, countToTrim);
-            this.lastPushedTile = this.tiles.Count > 0 ? this.tiles[this.tiles.Count - 1] : null;
         }
     }
 
     private bool IsValidTile(Tile tile)
     {
-        return tile != null && tile != this.lastPushedTile;
+        return tile != null && tile != this.PeekLastTile();
     }
 }
