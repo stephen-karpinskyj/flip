@@ -20,6 +20,13 @@ public class Traveller : BaseMonoBehaviour
     private Tile currentTile;
     private BoardDirection currentDir;
 
+    private Vector3 defaultScale;
+
+    private void Awake()
+    {
+        this.defaultScale = this.transform.localScale;
+    }
+
     private void Start()
     {   
         var initialTile = Board.Instance.GetTile(this.initialCoords);
@@ -27,11 +34,11 @@ public class Traveller : BaseMonoBehaviour
 
         this.UpdatePosition();
 
-        MusicManager.Instance.OnDrumsEvent += koreoEvent =>
+        MusicManager.Instance.OnPipaEvent += koreoEvent =>
         {
             //this.centreColourTweener.PlayInOut();
             this.StepMovement();
-            this.transform.DOPunchScale(this.punchTweenerData);
+            this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
         };
     }
 

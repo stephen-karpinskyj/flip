@@ -9,22 +9,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -2076007791, guid: 7ab44e72661444ea4b3b72f155c6ecea, type: 3}
-  m_Name: Drums only
+  m_Name: Piano
   m_EditorClassIdentifier: 
-  mSourceClip: {fileID: 8300000, guid: 3ab318946c5d440ffb3dcefc74e4780b, type: 3}
+  mSourceClip: {fileID: 8300000, guid: 49db94080b613406da19ddc1866a401a, type: 3}
   mAudioFilePath: 
   mSampleRate: 44100
   mIgnoreLatencyOffset: 0
   mTempoSections:
-  - sectionName: Spacer
+  - sectionName: Main
     startSample: 0
-    samplesPerBeat: 22050
-    beatsPerMeasure: 4
-    bStartNewMeasure: 1
-  - sectionName: Section
-    startSample: 22579
     samplesPerBeat: 20671.875
     beatsPerMeasure: 4
     bStartNewMeasure: 1
   mTracks:
-  - {fileID: 11400000, guid: 220bf78e662864eac9e768478f5a791a, type: 2}
+  - {fileID: 11400000, guid: a6e69eceda5104e3c93ee7499a5a3a50, type: 2}

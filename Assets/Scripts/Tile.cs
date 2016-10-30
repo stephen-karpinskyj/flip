@@ -24,6 +24,13 @@ public class Tile : BaseMonoBehaviour
 
     public Vector2I Coordinates { get; set; }
 
+    private Vector3 defaultScale;
+
+    private void Awake()
+    {
+        this.defaultScale = this.transform.localScale;
+    }
+
     public void SetPosition(Vector2 position)
     {
         this.transform.localPosition = position;
@@ -31,6 +38,6 @@ public class Tile : BaseMonoBehaviour
 
     public void Punch()
     {
-        this.transform.DOPunchScale(this.punchTweenerData);
+        this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
     }
 }

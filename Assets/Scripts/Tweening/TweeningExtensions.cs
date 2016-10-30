@@ -4,19 +4,23 @@ namespace DG.Tweening
 {
     public static class TweeningExtensions
     {
-        public static void DOPunchPosition(this Transform transform, PunchTweenerData data)
+        public static Tweener DOPunchPosition(this Transform transform, PunchTweenerData data)
         {
-            transform.DOPunchPosition(data.punch, data.duration, data.vibrato, data.elasticity);
+            return transform.DOPunchPosition(data.punch, data.duration, data.vibrato, data.elasticity);
         }
 
-        public static void DOPunchRotation(this Transform transform, PunchTweenerData data)
+        public static Tweener DOPunchRotation(this Transform transform, PunchTweenerData data)
         {
-            transform.DOPunchRotation(data.punch, data.duration, data.vibrato, data.elasticity);
+            return transform.DOPunchRotation(data.punch, data.duration, data.vibrato, data.elasticity);
         }
 
-        public static void DOPunchScale(this Transform transform, PunchTweenerData data)
+        public static Tweener DOPunchScale(this Transform transform, PunchTweenerData data, Vector3 defaultScale)
         {
-            transform.DOPunchScale(data.punch, data.duration, data.vibrato, data.elasticity);
+            transform.localScale = defaultScale;
+            var tweener = transform.DOPunchScale(data.punch, data.duration, data.vibrato, data.elasticity);
+            tweener.OnComplete(() => transform.localScale = defaultScale);
+
+            return tweener;
         }
     }
 }
