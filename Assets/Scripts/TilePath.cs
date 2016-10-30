@@ -76,6 +76,14 @@ public class TilePath
         return this.tiles.Count <= 1 ? null : this.tiles[this.tiles.Count - 2];
     }
 
+    public void ForEachTile(Action<Tile> action)
+    {
+        foreach (var tile in this.tiles)
+        {
+            action(tile);
+        }
+    }
+
     private void AddTile(Tile tile, Tile tileToClearOn)
     {
         if (this.Contains(tile))

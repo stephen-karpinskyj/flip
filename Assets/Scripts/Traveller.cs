@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 
-public class Traveller : BaseMonoBehaviour
+public class Traveller : BehaviourSingleton<Traveller>
 {
     [SerializeField]
     private float moveDuration = 0.05f;
@@ -22,6 +22,19 @@ public class Traveller : BaseMonoBehaviour
 
     private Vector3 defaultScale;
 
+    public delegate void StepCallback(Tile tile);
+    public StepCallback OnStep = delegate { };
+
+    public Tile CurrentTile
+    {
+        get { return this.currentTile; }
+    }
+
+    public TilePath CurrentPath
+    {
+        get { return this.pathDrawer.Path; }
+    }
+
     private void Awake()
     {
         this.defaultScale = this.transform.localScale;
@@ -34,9 +47,8 @@ public class Traveller : BaseMonoBehaviour
 
         this.UpdatePosition();
 
-        MusicManager.Instance.OnPipaEvent += koreoEvent =>
+        MusicManager.Instance.OnTrackNoteEvent += (track, value) =>
         {
-            //this.centreColourTweener.PlayInOut();
             this.StepMovement();
             this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
         };
@@ -81,6 +93,8 @@ public class Traveller : BaseMonoBehaviour
             this.UpdatePosition();
             this.UpdateRotation();
         });
+
+        this.OnStep(this.currentTile);
 
         return true;
     }

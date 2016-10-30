@@ -45,8 +45,6 @@ public class Board : BehaviourSingleton<Board>
                 tile.SetPosition(position);
             }
         }
-
-        Camera.main.orthographicSize = this.dimensions.x + 0.2f;
     }
 
     public List<Tile> Pathfind(Tile a, Tile b, BoardDirection inDirection)
@@ -92,7 +90,7 @@ public class Board : BehaviourSingleton<Board>
     public Tile GetTile(Vector2 screenPosition)
     {
         var worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-        var boardPosition = worldPosition - (Vector3)this.bottomLeft;
+        var boardPosition = worldPosition - (Vector3)this.bottomLeft - this.transform.position;
         var coords = new Vector2I(Mathf.RoundToInt(boardPosition.x), Mathf.RoundToInt(boardPosition.y));
 
         return this.GetTile(coords);

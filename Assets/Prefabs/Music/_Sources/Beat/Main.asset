@@ -11,32 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: -1223223985, guid: 7ab44e72661444ea4b3b72f155c6ecea, type: 3}
   m_Name: Main
   m_EditorClassIdentifier: 
-  mEventID: Triangle
+  mEventID: Beat
   mEventList:
-  - mStartSample: 3
-    mEndSample: 3
-  - mStartSample: 9920
-    mEndSample: 9920
-  - mStartSample: 15314
-    mEndSample: 15314
-  - mStartSample: 20683
-    mEndSample: 20683
-  - mStartSample: 30603
-    mEndSample: 30603
-  - mStartSample: 35997
-    mEndSample: 35997
-  - mStartSample: 41327
-    mEndSample: 41327
-  - mStartSample: 51247
-    mEndSample: 51247
-  - mStartSample: 56641
-    mEndSample: 56641
-  - mStartSample: 62010
-    mEndSample: 62010
-  - mStartSample: 71930
-    mEndSample: 71930
-  - mStartSample: 77324
-    mEndSample: 77324
+  - mStartSample: 0
+    mEndSample: 0
+  - mStartSample: 20671
+    mEndSample: 20671
+  - mStartSample: 41343
+    mEndSample: 41343
+  - mStartSample: 62015
+    mEndSample: 62015
   _SerializedPayloadTypes:
   - SonicBloom.Koreo.IntPayload
   _ColorPayloads: []
@@ -49,8 +33,7 @@ MonoBehaviour:
   _GradientPayloadIdxs: 
   _IntPayloads:
   - mIntVal: 0
-  - mIntVal: 0
-  _IntPayloadIdxs: 0000000006000000
+  _IntPayloadIdxs: 00000000
   _SpectrumPayloads: []
   _SpectrumPayloadIdxs: 
   _TextPayloads: []

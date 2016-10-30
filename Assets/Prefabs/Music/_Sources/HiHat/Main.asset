@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mEventID: HiHat
   mEventList:
-  - mStartSample: 0
-    mEndSample: 0
+  - mStartSample: 3
+    mEndSample: 3
   - mStartSample: 10192
     mEndSample: 10192
   - mStartSample: 20671
@@ -97,7 +97,11 @@ MonoBehaviour:
   - mIntVal: 0
   - mIntVal: 0
   - mIntVal: 0
-  _IntPayloadIdxs: 000000000800000010000000180000001a000000
+  - mIntVal: 0
+  - mIntVal: 0
+  - mIntVal: 0
+  - mIntVal: 0
+  _IntPayloadIdxs: 0000000004000000080000000c0000001000000014000000180000001a0000001c000000
   _SpectrumPayloads: []
   _SpectrumPayloadIdxs: 
   _TextPayloads: []
