@@ -2479,7 +2479,8 @@
         <member name="T:SonicBloom.Koreo.Players.AudioClipID">
             <summary>
             A struct to hold information that uniquely identifies an
-            <c>AudioClip.</c></summary>
+            <c>AudioClip</c>.
+            </summary>
         </member>
         <member name="F:SonicBloom.Koreo.Players.AudioClipID.instanceID">
             <summary>
@@ -2521,11 +2522,6 @@
             <summary>
             The ID of the <c>AudioClip</c> this AudioVisor is watching over.
             If a change is detected, this should get updated.
-            </summary>
-        </member>
-        <member name="F:SonicBloom.Koreo.Players.AudioVisor.audioBufferLen">
-            <summary>
-            Used internally to track sample-time steps.
             </summary>
         </member>
         <member name="M:SonicBloom.Koreo.Players.AudioVisor.ResyncTimings">
