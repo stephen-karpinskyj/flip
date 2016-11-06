@@ -53,12 +53,20 @@ MonoBehaviour:
   _GradientPayloadIdxs: 
   _IntPayloads:
   - mIntVal: 0
+  - mIntVal: 2
+  - mIntVal: 1
+  - mIntVal: 1
   - mIntVal: 0
+  - mIntVal: 1
+  - mIntVal: 1
   - mIntVal: 0
+  - mIntVal: 2
+  - mIntVal: 1
+  - mIntVal: 1
   - mIntVal: 0
-  - mIntVal: 0
-  - mIntVal: 0
-  _IntPayloadIdxs: 0000000004000000070000000b0000000c0000000d000000
+  - mIntVal: 1
+  - mIntVal: 1
+  _IntPayloadIdxs: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
   _SpectrumPayloads: []
   _SpectrumPayloadIdxs: 
   _TextPayloads: []

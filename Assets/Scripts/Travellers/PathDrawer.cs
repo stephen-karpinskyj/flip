@@ -55,14 +55,12 @@ public class PathDrawer
         {
             var shouldHighlight = this.Path.Contains(t);
 
-            if (shouldHighlight != t.Backing.IsHighlighted)
+            if (shouldHighlight != t.Border.IsHighlighted)
             {
                 t.Punch();
             }
 
-            //t.Border.Highlight(t == this.AllowedStartingTile);
-
-            t.Backing.Highlight(shouldHighlight);
+            t.Border.Highlight(shouldHighlight);
         });
     }
 }

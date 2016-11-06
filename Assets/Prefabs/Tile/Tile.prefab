@@ -202,6 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rend: {fileID: 212000012772322778}
   highlightedColor: {r: 0.39612806, g: 0.7123357, b: 0.8235294, a: 1}
+  defaultTransparency: 0.5
 --- !u!114 &114000013274281920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -215,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rend: {fileID: 23000011754617018}
   highlightedColor: {r: 0.76862746, g: 0.90588236, b: 0.9843137, a: 1}
+  defaultTransparency: 1
 --- !u!212 &212000011599003218
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -245,7 +247,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

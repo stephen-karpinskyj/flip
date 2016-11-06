@@ -67,9 +67,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4000012865290952}
-  - component: {fileID: 114000011764585146}
   - component: {fileID: 114000013937696634}
+  - component: {fileID: 114000011764585146}
   - component: {fileID: 114000013862536388}
+  - component: {fileID: 114000011189665186}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -596,6 +597,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114000011189665186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012947298638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b6f10eefad934460b49cb2ac232b7ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    koreographer: {fileID: 114000011764585146}
+    koreographyPlayer: {fileID: 114000013862536388}
+    mixer: {fileID: 24100000, guid: da8e4c9bbd9ce491a8f259c369262674, type: 2}
+    song: {fileID: 11400000, guid: 5f2dae6cb49e0474a8b2735d2e08fa54, type: 2}
 --- !u!114 &114000011764585146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -657,8 +674,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba06aeba1380244f8ac527ad59481b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  koreographer: {fileID: 114000011764585146}
-  player: {fileID: 114000013862536388}
-  mixer: {fileID: 24100000, guid: da8e4c9bbd9ce491a8f259c369262674, type: 2}
-  pickupPrefab: {fileID: 114000010705721988, guid: 2f4cb4e157b784787ad5641326e5ca9b,
-    type: 2}
+  pickupPrefabs:
+  - type: 0
+    prefab: {fileID: 114000010705721988, guid: 2f4cb4e157b784787ad5641326e5ca9b, type: 2}
+  - type: 1
+    prefab: {fileID: 114000011712610894, guid: 0d636304ae2c04b818c06735e151e323, type: 2}

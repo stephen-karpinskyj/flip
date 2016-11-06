@@ -50,4 +50,19 @@ public struct Vector2I
         v.y /= scalar;
         return v;
     }
+
+    public bool SharesAxisWith(Vector2I a, Vector2I b)
+    {
+        if (a.x == b.x)
+        {
+            return this.x == a.x;
+        }
+
+        if (a.y == b.y)
+        {
+            return this.y == a.y;
+        }
+
+        return false;
+    }
 }

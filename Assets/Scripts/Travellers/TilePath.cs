@@ -71,6 +71,12 @@ public class TilePath
         return this.tiles.Count <= 0 ? null : this.tiles[this.tiles.Count - 1];
     }
 
+    public Tile PeekNextTile(Tile tile)
+    {
+        var index = this.tiles.IndexOf(tile) + 1;
+        return index <= 0 || index >= this.tiles.Count ? null : this.tiles[index];
+    }
+
     public Tile PeekSecondLastTile()
     {
         return this.tiles.Count <= 1 ? null : this.tiles[this.tiles.Count - 2];

@@ -24,6 +24,8 @@ public class Tile : BaseMonoBehaviour
 
     public Vector2I Coordinates { get; set; }
 
+    public bool IsHighway { get; private set; }
+
     private Vector3 defaultScale;
 
     private void Awake()
@@ -39,5 +41,12 @@ public class Tile : BaseMonoBehaviour
     public void Punch()
     {
         this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
+    }
+
+    public void EnableHighway(bool enable)
+    {
+        this.IsHighway = enable;
+
+        this.backing.Highlight(enable);
     }
 }
