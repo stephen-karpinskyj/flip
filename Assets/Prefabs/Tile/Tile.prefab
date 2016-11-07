@@ -36,6 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000011908242384}
   - component: {fileID: 114000013274281920}
+  - component: {fileID: 114000012537870466}
   - component: {fileID: 33000010699368402}
   - component: {fileID: 23000011754617018}
   m_Layer: 0
@@ -183,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backing: {fileID: 114000013274281920}
+  backing2: {fileID: 114000012537870466}
   border: {fileID: 114000012403715312}
   punchTweenerData:
     punch: {x: 1.05, y: 1.05, z: 1.05}
@@ -202,7 +204,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rend: {fileID: 212000012772322778}
   highlightedColor: {r: 0.39612806, g: 0.7123357, b: 0.8235294, a: 1}
-  defaultTransparency: 0.5
+--- !u!114 &114000012537870466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011535572398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee295e79dbbc4385a53133f7d10cca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rend: {fileID: 23000011754617018}
+  highlightedColor: {r: 0.9225529, g: 0.96212107, b: 0.9843137, a: 1}
 --- !u!114 &114000013274281920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -215,8 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rend: {fileID: 23000011754617018}
-  highlightedColor: {r: 0.76862746, g: 0.90588236, b: 0.9843137, a: 1}
-  defaultTransparency: 1
+  highlightedColor: {r: 0.7372703, g: 0.8944797, b: 0.9843137, a: 1}
 --- !u!212 &212000011599003218
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -17,6 +17,10 @@ public class SongPlayer
     public delegate void SongEndCallback();
     public event SongEndCallback OnSongEnd = delegate { };
 
+    //TOOD: Move to Board
+    public delegate void PickupDestroyCallback(Pickup pickup);
+    public event PickupDestroyCallback OnPickupDestroy = delegate { };
+
     private readonly SongPlayerData data;
 
     private int currentBeat;
@@ -25,7 +29,7 @@ public class SongPlayer
     private int currentSection;
     private TrackType currentFocusedTrack;
 
-    private List<Pickup> currentPickups;
+    private List<Pickup> currentPickups; // TODO: Move to Board
     private Dictionary<TrackType, int> currentTrackLevels;
     private bool canMoveToNextSection;
 
@@ -37,6 +41,11 @@ public class SongPlayer
     public int CurrentMeasure
     {
         get { return this.currentMeasure; }
+    }
+
+    public bool IsEndingSection
+    {
+        get { return this.canMoveToNextSection; }
     }
 
     public SongPlayer(SongPlayerData data)
@@ -77,15 +86,6 @@ public class SongPlayer
         Debug.Log("[Song] Ending section=" + this.currentSection);
 
         this.canMoveToNextSection = true;
-
-        Board.Instance.ForEachTile(tile =>
-        {
-            if (tile.IsHighway)
-            {
-                tile.Punch();
-                tile.EnableHighway(false);
-            }
-        });
     }
 
     public bool HasPickup(Tile tile)
@@ -275,16 +275,11 @@ public class SongPlayer
     {
         this.currentPickups.Remove(pickup);
 
-        var tiles = Board.Instance.Pathfind(Traveller.Instance.CurrentTile, pickup.CurrentTile, Traveller.Instance.CurrentDirection);
-
-        foreach (var t in tiles)
-        {
-            t.EnableHighway(true);
-        }
-
         if (this.CanMoveToNextLevel())
         {
             this.StartLevel();
         }
+
+        this.OnPickupDestroy(pickup);
     }
 }

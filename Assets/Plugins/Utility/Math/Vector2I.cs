@@ -51,6 +51,11 @@ public struct Vector2I
         return v;
     }
 
+    public bool SharesAxisWith(Vector2I a)
+    {
+        return this.x == a.x || this.y == a.y;
+    }
+
     public bool SharesAxisWith(Vector2I a, Vector2I b)
     {
         if (a.x == b.x)

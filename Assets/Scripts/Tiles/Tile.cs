@@ -3,8 +3,18 @@ using DG.Tweening;
 
 public class Tile : BaseMonoBehaviour
 {
+    public enum HighwayMode
+    {
+        IsNot = 0,
+        MightBe,
+        Is,
+    }
+
     [SerializeField]
     private TileHighlightable backing;
+
+    [SerializeField]
+    private TileHighlightable backing2;
 
     [SerializeField]
     private TileHighlightable border;
@@ -24,7 +34,7 @@ public class Tile : BaseMonoBehaviour
 
     public Vector2I Coordinates { get; set; }
 
-    public bool IsHighway { get; private set; }
+    public HighwayMode CurrentHighwayMode { get; private set; }
 
     private Vector3 defaultScale;
 
@@ -43,10 +53,22 @@ public class Tile : BaseMonoBehaviour
         this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
     }
 
-    public void EnableHighway(bool enable)
+    public void SetHighwayMode(HighwayMode mode)
     {
-        this.IsHighway = enable;
+        this.CurrentHighwayMode = mode;
 
-        this.backing.Highlight(enable);
+        if (mode == HighwayMode.IsNot)
+        {
+            this.backing.Highlight(false);
+            this.backing2.Highlight(false);
+        }
+        else if (mode == HighwayMode.MightBe)
+        {
+            this.backing2.Highlight(true);
+        }
+        else if (mode == HighwayMode.Is)
+        {
+            this.backing.Highlight(true);
+        }
     }
 }

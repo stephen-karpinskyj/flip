@@ -69,6 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000011559454728}
   - component: {fileID: 114000012277045022}
+  - component: {fileID: 114000013397401554}
   m_Layer: 0
   m_Name: Traveller
   m_TagString: Untagged
@@ -167,6 +168,17 @@ MonoBehaviour:
     duration: 0.1
     vibrato: 80
     elasticity: 0.5
+--- !u!114 &114000013397401554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014136622054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 508913999d9df4be9ae7e95c14ca087c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212000011808030098
 SpriteRenderer:
   m_ObjectHideFlags: 1

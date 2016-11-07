@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
 
 public class Traveller : BehaviourSingleton<Traveller>
@@ -20,6 +19,8 @@ public class Traveller : BehaviourSingleton<Traveller>
 
     private Tile currentTile;
     private BoardDirection currentDir;
+
+    private Tile highwayCreationStartTile;
 
     private Vector3 defaultScale;
 
@@ -85,101 +86,74 @@ public class Traveller : BehaviourSingleton<Traveller>
         return Vector3.forward * angle;
     }
 
-    private bool StepMovement()
+    private void StepMovement()
     {
         var nextTile = this.pathDrawer.Path.PopFirstTile();
 
-        if (nextTile == null)
+        if (nextTile != null)
         {
-            return false;
-        }
-
-        var isStillStepping = true;
-
-        // Check for pickup
-        {
+            var isStillStepping = true;
             var hasPickup = MusicManager.Instance.Player.HasPickup(nextTile);
 
-            if (hasPickup)
+            // Skip over highways
+            if (!hasPickup)
             {
-                isStillStepping = false;
-            }
-        }
-
-        // Jump to next pickup
-        if (isStillStepping)
-        {
-            var peekedTile = this.pathDrawer.Path.PeekFirstTile();
-
-            while (peekedTile != null)
-            {
-                var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
-
-                if (!isInTravellingDirection)
+                if (this.currentTile.CurrentHighwayMode != Tile.HighwayMode.Is || nextTile.CurrentHighwayMode != Tile.HighwayMode.Is)
                 {
-                    break;
+                    isStillStepping = false;
                 }
 
-                var hasPickup = MusicManager.Instance.Player.HasPickup(peekedTile);
-
-                if (hasPickup)
+                while (isStillStepping)
                 {
-                    while (nextTile != peekedTile)
+                    var peekedTile = this.pathDrawer.Path.PeekFirstTile();
+                    hasPickup = MusicManager.Instance.Player.HasPickup(peekedTile);
+
+                    if (hasPickup)
                     {
-                        nextTile = this.pathDrawer.Path.PopFirstTile();
+                        var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
+
+                        if (isInTravellingDirection)
+                        {
+                            nextTile = this.pathDrawer.Path.PopFirstTile();
+                        }
+
+                        isStillStepping = false;
                     }
+                    else
+                    {
+                        if (peekedTile == null)
+                        {
+                            isStillStepping = false;
+                        }
+                        else
+                        {
+                            var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
 
-                    isStillStepping = false;
-                    break;
+                            if (!isInTravellingDirection || peekedTile.CurrentHighwayMode != Tile.HighwayMode.Is)
+                            {
+                                isStillStepping = false;
+                            }
+                            else
+                            {
+                                nextTile = this.pathDrawer.Path.PopFirstTile();
+                            }
+                        }
+                    }
                 }
-
-                peekedTile = this.pathDrawer.Path.PeekNextTile(peekedTile);
             }
-        }
+            
+            this.ChangeTile(nextTile);
 
-        // Skip over highways
-        if (isStillStepping)
-        {
-            if (!this.currentTile.IsHighway || !nextTile.IsHighway)
+            this.transform.DORotate(this.CalculateRotation(), this.moveDuration);
+            var tween = this.transform.DOMove(nextTile.transform.position, this.moveDuration);
+            tween.OnComplete(() =>
             {
-                isStillStepping = false;
-            }
-
-            while (isStillStepping)
-            {
-                var peekedTile = this.pathDrawer.Path.PeekFirstTile();
-
-                if (peekedTile == null)
-                {
-                    isStillStepping = false;
-                    continue;
-                }
-
-                var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
-
-                if (!isInTravellingDirection || !peekedTile.IsHighway)
-                {
-                    isStillStepping = false;
-                    continue;
-                }
-
-                nextTile = this.pathDrawer.Path.PopFirstTile();
-            }
+                this.UpdatePosition();
+                this.UpdateRotation();
+            });
         }
-        
-        this.ChangeTile(nextTile);
-
-        this.transform.DORotate(this.CalculateRotation(), this.moveDuration);
-        var tween = this.transform.DOMove(nextTile.transform.position, this.moveDuration);
-        tween.OnComplete(() =>
-        {
-            this.UpdatePosition();
-            this.UpdateRotation();
-        });
 
         this.OnStep(this.currentTile);
-
-        return true;
     }
 
     private void ChangeTile(Tile tile)
