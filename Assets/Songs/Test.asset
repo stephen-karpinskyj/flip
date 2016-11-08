@@ -19,77 +19,53 @@ MonoBehaviour:
       - type: 0
         position:
           x: 2
-          y: 2
+          y: 1
     - minNoteValue: 0
       patterns:
       - type: 0
         position:
           x: 2
-          y: 4
-    - minNoteValue: 1
-      patterns:
-      - type: 0
-        position:
-          x: 1
-          y: 5
-      - type: 0
-        position:
-          x: 3
-          y: 3
-      - type: 0
-        position:
-          x: 1
-          y: 3
-      - type: 0
-        position:
-          x: 3
           y: 5
     - minNoteValue: 1
       patterns:
       - type: 0
         position:
-          x: 0
+          x: 1
           y: 6
       - type: 0
         position:
-          x: 4
-          y: 2
-      - type: 0
-        position:
-          x: 0
-          y: 2
-      - type: 0
-        position:
-          x: 4
-          y: 6
-    - minNoteValue: 2
-      patterns:
-      - type: 0
-        position:
-          x: 0
-          y: 4
-      - type: 0
-        position:
-          x: 4
-          y: 4
-      - type: 0
-        position:
-          x: 2
-          y: 6
-    - minNoteValue: 2
-      patterns:
-      - type: 0
-        position:
-          x: 2
+          x: 3
           y: 4
       - type: 0
         position:
           x: 1
-          y: 5
+          y: 4
       - type: 0
         position:
           x: 3
-          y: 3
+          y: 6
+    - minNoteValue: 1
+      patterns:
+      - type: 0
+        position:
+          x: 0
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 7
+      - type: 0
+        position:
+          x: 3
+          y: 7
+      - type: 0
+        position:
+          x: 4
+          y: 6
+      - type: 0
+        position:
+          x: 0
+          y: 4
       - type: 0
         position:
           x: 1
@@ -97,23 +73,41 @@ MonoBehaviour:
       - type: 0
         position:
           x: 3
-          y: 5
-      - type: 0
-        position:
-          x: 0
-          y: 6
+          y: 3
       - type: 0
         position:
           x: 4
-          y: 2
+          y: 4
+    - minNoteValue: 1
+      patterns:
       - type: 0
         position:
           x: 0
-          y: 2
+          y: 7
       - type: 0
         position:
           x: 4
-          y: 6
+          y: 7
+      - type: 0
+        position:
+          x: 0
+          y: 0
+      - type: 0
+        position:
+          x: 1
+          y: 0
+      - type: 0
+        position:
+          x: 2
+          y: 0
+      - type: 0
+        position:
+          x: 3
+          y: 0
+      - type: 0
+        position:
+          x: 4
+          y: 0
   - track: 2
     levels:
     - minNoteValue: 0
@@ -164,15 +158,91 @@ MonoBehaviour:
       patterns:
       - type: 0
         position:
-          x: 2
-          y: 0
-      - type: 0
-        position:
-          x: 2
-          y: 7
+          x: 0
+          y: 1
       - type: 0
         position:
           x: 0
+          y: 3
+      - type: 0
+        position:
+          x: 0
+          y: 4
+      - type: 0
+        position:
+          x: 0
+          y: 6
+      - type: 0
+        position:
+          x: 4
+          y: 1
+      - type: 0
+        position:
+          x: 4
+          y: 3
+      - type: 0
+        position:
+          x: 4
+          y: 4
+      - type: 0
+        position:
+          x: 4
+          y: 6
+    - minNoteValue: 1
+      patterns:
+      - type: 0
+        position:
+          x: 1
+          y: 6
+      - type: 0
+        position:
+          x: 2
+          y: 6
+      - type: 0
+        position:
+          x: 3
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 4
+      - type: 0
+        position:
+          x: 2
+          y: 4
+      - type: 0
+        position:
+          x: 3
+          y: 4
+      - type: 0
+        position:
+          x: 1
+          y: 2
+      - type: 0
+        position:
+          x: 2
+          y: 2
+      - type: 0
+        position:
+          x: 3
+          y: 2
+    - minNoteValue: 1
+      patterns:
+      - type: 0
+        position:
+          x: 0
+          y: 1
+      - type: 0
+        position:
+          x: 1
+          y: 1
+      - type: 0
+        position:
+          x: 2
+          y: 1
+      - type: 0
+        position:
+          x: 3
           y: 1
       - type: 0
         position:
@@ -181,11 +251,75 @@ MonoBehaviour:
       - type: 0
         position:
           x: 0
+          y: 2
+      - type: 0
+        position:
+          x: 4
+          y: 2
+      - type: 0
+        position:
+          x: 0
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 6
+      - type: 0
+        position:
+          x: 2
+          y: 6
+      - type: 0
+        position:
+          x: 3
           y: 6
       - type: 0
         position:
           x: 4
           y: 6
+      - type: 0
+        position:
+          x: 0
+          y: 5
+      - type: 0
+        position:
+          x: 4
+          y: 5
+    - minNoteValue: 1
+      patterns:
+      - type: 0
+        position:
+          x: 2
+          y: 4
+      - type: 0
+        position:
+          x: 2
+          y: 5
+      - type: 0
+        position:
+          x: 3
+          y: 4
+      - type: 0
+        position:
+          x: 3
+          y: 5
+    - minNoteValue: 1
+      patterns:
+      - type: 0
+        position:
+          x: 2
+          y: 2
+      - type: 0
+        position:
+          x: 2
+          y: 3
+      - type: 0
+        position:
+          x: 1
+          y: 2
+      - type: 0
+        position:
+          x: 1
+          y: 3
   - track: 3
     levels:
     - minNoteValue: 1
@@ -354,6 +488,354 @@ MonoBehaviour:
         position:
           x: 4
           y: 7
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 0
+          y: 7
+      - type: 0
+        position:
+          x: 2
+          y: 7
+      - type: 0
+        position:
+          x: 4
+          y: 7
+      - type: 0
+        position:
+          x: 1
+          y: 6
+      - type: 0
+        position:
+          x: 3
+          y: 6
+      - type: 0
+        position:
+          x: 0
+          y: 5
+      - type: 0
+        position:
+          x: 2
+          y: 5
+      - type: 0
+        position:
+          x: 4
+          y: 5
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 0
+          y: 0
+      - type: 0
+        position:
+          x: 1
+          y: 0
+      - type: 0
+        position:
+          x: 2
+          y: 0
+      - type: 0
+        position:
+          x: 3
+          y: 0
+      - type: 0
+        position:
+          x: 4
+          y: 0
+      - type: 0
+        position:
+          x: 4
+          y: 1
+      - type: 0
+        position:
+          x: 4
+          y: 2
+      - type: 0
+        position:
+          x: 4
+          y: 3
+      - type: 0
+        position:
+          x: 4
+          y: 4
+      - type: 0
+        position:
+          x: 4
+          y: 5
+      - type: 0
+        position:
+          x: 4
+          y: 6
+      - type: 0
+        position:
+          x: 4
+          y: 7
+      - type: 0
+        position:
+          x: 3
+          y: 7
+      - type: 0
+        position:
+          x: 2
+          y: 7
+      - type: 0
+        position:
+          x: 1
+          y: 7
+      - type: 0
+        position:
+          x: 0
+          y: 7
+      - type: 0
+        position:
+          x: 0
+          y: 6
+      - type: 0
+        position:
+          x: 0
+          y: 5
+      - type: 0
+        position:
+          x: 0
+          y: 4
+      - type: 0
+        position:
+          x: 0
+          y: 3
+      - type: 0
+        position:
+          x: 0
+          y: 2
+      - type: 0
+        position:
+          x: 0
+          y: 1
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 1
+          y: 1
+      - type: 0
+        position:
+          x: 2
+          y: 1
+      - type: 0
+        position:
+          x: 3
+          y: 1
+      - type: 0
+        position:
+          x: 3
+          y: 2
+      - type: 0
+        position:
+          x: 3
+          y: 3
+      - type: 0
+        position:
+          x: 3
+          y: 4
+      - type: 0
+        position:
+          x: 3
+          y: 5
+      - type: 0
+        position:
+          x: 3
+          y: 6
+      - type: 0
+        position:
+          x: 2
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 5
+      - type: 0
+        position:
+          x: 1
+          y: 4
+      - type: 0
+        position:
+          x: 1
+          y: 3
+      - type: 0
+        position:
+          x: 1
+          y: 2
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 2
+          y: 2
+      - type: 0
+        position:
+          x: 2
+          y: 3
+      - type: 0
+        position:
+          x: 2
+          y: 4
+      - type: 0
+        position:
+          x: 2
+          y: 5
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 1
+          y: 1
+      - type: 0
+        position:
+          x: 2
+          y: 1
+      - type: 0
+        position:
+          x: 3
+          y: 1
+      - type: 0
+        position:
+          x: 3
+          y: 2
+      - type: 0
+        position:
+          x: 3
+          y: 3
+      - type: 0
+        position:
+          x: 3
+          y: 4
+      - type: 0
+        position:
+          x: 3
+          y: 5
+      - type: 0
+        position:
+          x: 3
+          y: 6
+      - type: 0
+        position:
+          x: 2
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 6
+      - type: 0
+        position:
+          x: 1
+          y: 5
+      - type: 0
+        position:
+          x: 1
+          y: 4
+      - type: 0
+        position:
+          x: 1
+          y: 3
+      - type: 0
+        position:
+          x: 1
+          y: 2
+    - minNoteValue: 2
+      patterns:
+      - type: 0
+        position:
+          x: 0
+          y: 0
+      - type: 0
+        position:
+          x: 1
+          y: 0
+      - type: 0
+        position:
+          x: 2
+          y: 0
+      - type: 0
+        position:
+          x: 3
+          y: 0
+      - type: 0
+        position:
+          x: 4
+          y: 0
+      - type: 0
+        position:
+          x: 4
+          y: 1
+      - type: 0
+        position:
+          x: 4
+          y: 2
+      - type: 0
+        position:
+          x: 4
+          y: 3
+      - type: 0
+        position:
+          x: 4
+          y: 4
+      - type: 0
+        position:
+          x: 4
+          y: 5
+      - type: 0
+        position:
+          x: 4
+          y: 6
+      - type: 0
+        position:
+          x: 4
+          y: 7
+      - type: 0
+        position:
+          x: 3
+          y: 7
+      - type: 0
+        position:
+          x: 2
+          y: 7
+      - type: 0
+        position:
+          x: 1
+          y: 7
+      - type: 0
+        position:
+          x: 0
+          y: 7
+      - type: 0
+        position:
+          x: 0
+          y: 6
+      - type: 0
+        position:
+          x: 0
+          y: 5
+      - type: 0
+        position:
+          x: 0
+          y: 4
+      - type: 0
+        position:
+          x: 0
+          y: 3
+      - type: 0
+        position:
+          x: 0
+          y: 2
+      - type: 0
+        position:
+          x: 0
+          y: 1
   songSections:
   - onStart:
     - type: 2
