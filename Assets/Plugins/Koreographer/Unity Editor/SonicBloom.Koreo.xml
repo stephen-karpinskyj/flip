@@ -2524,6 +2524,20 @@
             If a change is detected, this should get updated.
             </summary>
         </member>
+        <member name="F:SonicBloom.Koreo.Players.AudioVisor.dspPlayStartTime">
+            <summary>
+            If AudioSource Scheduling features are used, this field will contain
+            the target start time according to the DSP clock.
+            </summary>
+        </member>
+        <member name="P:SonicBloom.Koreo.Players.AudioVisor.ScheduledPlayTime">
+            <summary>
+            Gets or sets the scheduled play time of the associated AudioSoure. This is required
+            for properly handling scheduled playback because Unity does not have a way to inspect
+            the scheduled state of an AudioClip in an AudioSource.
+            </summary>
+            <value>The DSP time at which audio playback is set to begin.</value>
+        </member>
         <member name="M:SonicBloom.Koreo.Players.AudioVisor.ResyncTimings">
             <summary>
             This is used when the <c>AudioSource</c> has a clip change or a jump within the audio.
