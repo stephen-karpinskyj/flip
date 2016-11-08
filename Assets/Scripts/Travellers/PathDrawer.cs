@@ -4,7 +4,6 @@ using UnityEngine;
 [Serializable]
 public class PathDrawer
 {
-    private Tile lastPressedTile;
     private Tile currentPressedTile;
 
     public readonly TilePath Path = new TilePath();
@@ -13,21 +12,41 @@ public class PathDrawer
 
     public void CheckInput()
     {
-        var isDown = Input.anyKey;
+        var isDown = Input.anyKeyDown;
 
         if (isDown)
         {
             this.currentPressedTile = Board.Instance.GetTile(Input.mousePosition);
-            var pressingLastTile = this.currentPressedTile == this.lastPressedTile;
+            var pressingLastTile = this.currentPressedTile == this.Path.PeekLastTile();
+            var pressingTileWithPickup = MusicManager.Instance.Player.HasPickup(this.currentPressedTile, true);
 
-            if (!pressingLastTile)
+            if (pressingLastTile)
             {
-                var pressingStartTile = this.currentPressedTile == this.AllowedStartingTile;
+                this.currentPressedTile = this.Path.PopLastTile();
+                var isRollingBack = true;
 
-                if (pressingStartTile)
+                while (isRollingBack)
                 {
-                    this.Path.Clear();
+                    this.currentPressedTile = this.Path.PeekLastTile();
+
+                    if (this.currentPressedTile == null || MusicManager.Instance.Player.HasPickup(this.currentPressedTile, true))
+                    {
+                        isRollingBack = false;
+                    }
+                    else
+                    {
+                        this.currentPressedTile = this.Path.PopLastTile();
+                    }
                 }
+            }
+            else if (pressingTileWithPickup)
+            {
+//                var pressingStartTile = this.currentPressedTile == this.AllowedStartingTile;
+//
+//                if (pressingStartTile)
+//                {
+//                    this.Path.Clear();
+//                }
 
                 var lastTile = this.AllowedStartingTile;
                 var inDirection = this.StartingDirection;
@@ -48,8 +67,6 @@ public class PathDrawer
                 this.Path.PushTile(this.currentPressedTile, this.AllowedStartingTile, inDirection);
             }
         }
-
-        this.lastPressedTile = isDown ? this.currentPressedTile : null;
 
         Board.Instance.ForEachTile(t =>
         {

@@ -61,6 +61,19 @@ public class TilePath
         return first;
     }
 
+    public Tile PopLastTile()
+    {
+        if (this.tiles.Count <= 0)
+        {
+            return null;
+        }
+
+        var last = this.PeekLastTile();
+        this.tiles.RemoveAt(this.tiles.Count - 1);
+
+        return last;
+    }
+
     public Tile PeekFirstTile()
     {
         return this.tiles.Count <= 0 ? null : this.tiles[0];
@@ -74,6 +87,12 @@ public class TilePath
     public Tile PeekNextTile(Tile tile)
     {
         var index = this.tiles.IndexOf(tile) + 1;
+        return index <= 0 || index >= this.tiles.Count ? null : this.tiles[index];
+    }
+
+    public Tile PeekPrevTile(Tile tile)
+    {
+        var index = this.tiles.IndexOf(tile) - 1;
         return index <= 0 || index >= this.tiles.Count ? null : this.tiles[index];
     }
 
@@ -92,15 +111,15 @@ public class TilePath
 
     private void AddTile(Tile tile, Tile tileToClearOn)
     {
-        if (this.Contains(tile))
-        {
-            this.TrimToTile(tile);
-        }
-
-        if (tile == tileToClearOn)
-        {
-            this.Clear();
-        }
+//        if (this.Contains(tile))
+//        {
+//            this.TrimToTile(tile);
+//        }
+//
+//        if (tile == tileToClearOn)
+//        {
+//            this.Clear();
+//        }
 
         this.tiles.Add(tile);
     }

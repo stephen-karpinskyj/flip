@@ -20,8 +20,6 @@ public class Traveller : BehaviourSingleton<Traveller>
     private Tile currentTile;
     private BoardDirection currentDir;
 
-    private Tile highwayCreationStartTile;
-
     private Vector3 defaultScale;
 
     public delegate void StepCallback(Tile tile);
@@ -90,58 +88,51 @@ public class Traveller : BehaviourSingleton<Traveller>
     {
         var nextTile = this.pathDrawer.Path.PopFirstTile();
 
+        var isStillStepping = true;
+
         if (nextTile != null)
         {
-            var isStillStepping = true;
-            var hasPickup = MusicManager.Instance.Player.HasPickup(nextTile);
-
-            // Skip over highways
-            if (!hasPickup)
+            // Check for pickup
             {
-                if (this.currentTile.CurrentHighwayMode != Tile.HighwayMode.Is || nextTile.CurrentHighwayMode != Tile.HighwayMode.Is)
+                var hasPickup = MusicManager.Instance.Player.HasPickup(nextTile);
+
+                if (hasPickup)
                 {
                     isStillStepping = false;
                 }
+            }
 
-                while (isStillStepping)
+            // Jump to next pickup
+            if (isStillStepping)
+            {
+                var peekedTile = this.pathDrawer.Path.PeekFirstTile();
+
+                while (peekedTile != null)
                 {
-                    var peekedTile = this.pathDrawer.Path.PeekFirstTile();
-                    hasPickup = MusicManager.Instance.Player.HasPickup(peekedTile);
+                    var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
+
+                    if (!isInTravellingDirection)
+                    {
+                        break;
+                    }
+
+                    var hasPickup = MusicManager.Instance.Player.HasPickup(peekedTile);
 
                     if (hasPickup)
                     {
-                        var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
-
-                        if (isInTravellingDirection)
+                        while (nextTile != peekedTile)
                         {
                             nextTile = this.pathDrawer.Path.PopFirstTile();
                         }
 
                         isStillStepping = false;
+                        break;
                     }
-                    else
-                    {
-                        if (peekedTile == null)
-                        {
-                            isStillStepping = false;
-                        }
-                        else
-                        {
-                            var isInTravellingDirection = peekedTile.Coordinates.SharesAxisWith(this.CurrentTile.Coordinates, nextTile.Coordinates);
 
-                            if (!isInTravellingDirection || peekedTile.CurrentHighwayMode != Tile.HighwayMode.Is)
-                            {
-                                isStillStepping = false;
-                            }
-                            else
-                            {
-                                nextTile = this.pathDrawer.Path.PopFirstTile();
-                            }
-                        }
-                    }
+                    peekedTile = this.pathDrawer.Path.PeekNextTile(peekedTile);
                 }
             }
-            
+
             this.ChangeTile(nextTile);
 
             this.transform.DORotate(this.CalculateRotation(), this.moveDuration);
@@ -153,7 +144,7 @@ public class Traveller : BehaviourSingleton<Traveller>
             });
         }
 
-        this.OnStep(this.currentTile);
+        this.OnStep(nextTile ?? this.currentTile);
     }
 
     private void ChangeTile(Tile tile)

@@ -104,6 +104,27 @@ public class Board : BehaviourSingleton<Board>
         return this.tiles[coords.x, coords.y];
     }
 
+    public Tile GetAdjacentTile(Tile tile, BoardDirection inDirection)
+    {
+        if (tile == null)
+        {
+            return null;
+        }
+
+        var adjacentCoords = tile.Coordinates;
+
+        if (!Mathf.Approximately(inDirection.Value.x, 0f))
+        {
+            adjacentCoords.x += inDirection.Value.x > 0 ? 1 : -1;
+        }
+        else if (!Mathf.Approximately(inDirection.Value.y, 0f))
+        {
+            adjacentCoords.y += inDirection.Value.y > 0 ? 1 : -1;
+        }
+
+        return this.GetTile(adjacentCoords);
+    }
+
     public void ForEachTile(Action<Tile> action)
     {
         foreach (var tile in this.tiles)

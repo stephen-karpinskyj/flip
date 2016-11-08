@@ -88,7 +88,7 @@ public class SongPlayer
         this.canMoveToNextSection = true;
     }
 
-    public bool HasPickup(Tile tile)
+    public bool HasPickup(Tile tile, bool includeAllLayers = false)
     {
         if (tile == null)
         {
@@ -97,7 +97,17 @@ public class SongPlayer
 
         var pickup = this.currentPickups.Find(p => p.CurrentTile == tile);
 
-        return pickup != null && pickup.CurrentLayer == PickupLayer.Foreground;
+        if (pickup == null)
+        {
+            return false;
+        }
+
+        if (!includeAllLayers && pickup.CurrentLayer != PickupLayer.Foreground)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void ListenToEvents()
