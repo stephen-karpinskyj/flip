@@ -98,10 +98,6 @@ MonoBehaviour:
           y: 0
       - type: 0
         position:
-          x: 2
-          y: 0
-      - type: 0
-        position:
           x: 3
           y: 0
       - type: 0
@@ -208,10 +204,6 @@ MonoBehaviour:
           y: 4
       - type: 0
         position:
-          x: 2
-          y: 4
-      - type: 0
-        position:
           x: 3
           y: 4
       - type: 0
@@ -256,34 +248,6 @@ MonoBehaviour:
         position:
           x: 4
           y: 2
-      - type: 0
-        position:
-          x: 0
-          y: 6
-      - type: 0
-        position:
-          x: 1
-          y: 6
-      - type: 0
-        position:
-          x: 2
-          y: 6
-      - type: 0
-        position:
-          x: 3
-          y: 6
-      - type: 0
-        position:
-          x: 4
-          y: 6
-      - type: 0
-        position:
-          x: 0
-          y: 5
-      - type: 0
-        position:
-          x: 4
-          y: 5
     - minNoteValue: 1
       patterns:
       - type: 0
