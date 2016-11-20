@@ -132,7 +132,17 @@ public abstract class Pickup : BaseMonoBehaviour
 
     public void Hide(bool hide)
     {
+        if (this.gameObject.activeSelf == !hide)
+        {
+            return;
+        }
+        
         this.gameObject.SetActive(!hide);
+
+        if (!hide)
+        {
+            this.Punch(true);
+        }
     }
 
     private void ScaleDown(TweenCallback onComplete)

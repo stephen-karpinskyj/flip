@@ -15,6 +15,15 @@ public class Traveller : BehaviourSingleton<Traveller>
     [SerializeField]
     private PunchTweenerData punchTweenerData;
 
+    [SerializeField]
+    private SpriteRenderer outerBacking;
+
+    [SerializeField]
+    private SpriteRenderer directionMarker;
+
+    [SerializeField]
+    private float semiTransparentValue = 0.5f;
+
     private PathDrawer pathDrawer = new PathDrawer();
 
     private Tile currentTile;
@@ -66,6 +75,17 @@ public class Traveller : BehaviourSingleton<Traveller>
     private void Update()
     {
         this.pathDrawer.CheckInput();
+    }
+
+    public void MakeActive(bool active)
+    {
+        var c = this.outerBacking.color;
+        c.a = active ? this.semiTransparentValue : 1f;
+        this.outerBacking.color = c;
+
+        c = this.directionMarker.color;
+        c.a = active ? this.semiTransparentValue : 1f;
+        this.directionMarker.color = c;
     }
 
     private void UpdatePosition()

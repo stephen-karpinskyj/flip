@@ -11,38 +11,34 @@ public class Tile : BaseMonoBehaviour
     }
 
     [SerializeField]
-    private Highlightable backing;
+    private MeshRenderer backingRenderer;
 
     [SerializeField]
-    private Highlightable backing2;
+    private TileHighlighter backing;
 
     [SerializeField]
-    private Highlightable border;
+    private Vector2I colourRange;
 
     [SerializeField]
     private PunchTweenerData punchTweenerData;
 
-    public Highlightable DarkBacking
-    {
-        get { return this.backing; }
-    }
-
-    public Highlightable LightBacking
-    {
-        get { return this.backing2; }
-    }
-
-    public Highlightable Border
-    {
-        get { return this.border; }
-    }
-
     public Vector2I Coordinates { get; set; }
 
+    private float defaultColorScale;
     private Vector3 defaultScale;
+
+    public bool IsHighlighted
+    {
+        get { return this.backing.IsHighlighted; }
+    }
 
     private void Awake()
     {
+        var c = (byte)Random.Range(this.colourRange.x, this.colourRange.y);
+        this.defaultColorScale = c / 255f;
+        var color = new Color32(c, c, c, byte.MaxValue);
+        this.backingRenderer.material.color = color;
+
         this.defaultScale = this.transform.localScale;
     }
 
@@ -54,5 +50,10 @@ public class Tile : BaseMonoBehaviour
     public void Punch()
     {
         this.transform.DOPunchScale(this.punchTweenerData, this.defaultScale);
+    }
+
+    public void Highlight(bool highlight)
+    {
+        this.backing.Highlight(this.defaultColorScale, highlight);
     }
 }

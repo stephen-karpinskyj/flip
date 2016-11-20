@@ -65,10 +65,11 @@ public class SongPlayer
 
         this.currentTrackLevels = new Dictionary<TrackType, int>();
         this.canMoveToNextSection = true;
+        Traveller.Instance.MakeActive(this.canMoveToNextSection);
 
         this.ListenToEvents();
 
-        this.SpawnNextSectionStartPatterns();
+        this.SpawnNextSectionStartPatterns(true);
 
         Board.Instance.OnPickupDestroy += this.HandlePickupDestroy; // TODO: Unsub
     }
@@ -94,6 +95,7 @@ public class SongPlayer
         Debug.Log("[Song] Ending section=" + this.currentSection);
 
         this.canMoveToNextSection = true;
+        Traveller.Instance.MakeActive(this.canMoveToNextSection);
     }
 
     private void ListenToEvents()
@@ -148,7 +150,7 @@ public class SongPlayer
         {
             this.EndSection();
 
-            this.SpawnNextSectionStartPatterns();
+            this.SpawnNextSectionStartPatterns(false);
         }
         else
         {
@@ -161,7 +163,7 @@ public class SongPlayer
                 Board.Instance.AddForegroundPickup(pattern);
             }
 
-            this.SpawnNextLevelPatterns(this.currentFocusedTrack);
+            this.SpawnNextLevelPatterns(this.currentFocusedTrack, false);
 
             if (this.CanMoveToNextLevel())
             {
@@ -173,6 +175,7 @@ public class SongPlayer
     private void StartSection()
     {
         this.canMoveToNextSection = false;
+        Traveller.Instance.MakeActive(this.canMoveToNextSection);
 
         var section = this.data.Song.GetSection(this.currentSection);
 
@@ -222,7 +225,7 @@ public class SongPlayer
         this.currentTrackLevels[this.currentFocusedTrack] = level;
     }
 
-    public void SpawnNextLevelPatterns(TrackType track)
+    public void SpawnNextLevelPatterns(TrackType track, bool foreground)
     {
         var nextLevel = this.GetTrackLevel(track) + 1;
         var nextLevelPatterns = this.data.Song.GetPickupPattern(track, nextLevel);
@@ -231,25 +234,32 @@ public class SongPlayer
         {
             foreach (var pattern in nextLevelPatterns.Patterns)
             {
-                Board.Instance.AddBackgroundPickup(pattern);
+                if (foreground)
+                {
+                    Board.Instance.AddForegroundPickup(pattern);
+                }
+                else
+                {
+                    Board.Instance.AddBackgroundPickup(pattern);
+                }
             }
         }
     }
 
-    private void SpawnNextSectionStartPatterns()
+    private void SpawnNextSectionStartPatterns(bool foreground)
     {
         var nextSection = this.data.Song.GetSection(this.currentSection + 1);
 
         if (nextSection != null)
         {
             var track = nextSection.FindFocusedTrack();
-            this.SpawnNextLevelPatterns(track);
+            this.SpawnNextLevelPatterns(track, foreground);
         }
     }
 
     private void HandleTrackEvent(KoreographyEvent ev, TrackType track)
     {
-        if (this.IsEndingSection || track != this.currentFocusedTrack)
+        if (this.canMoveToNextSection || track != this.currentFocusedTrack)
         {
             return;
         }

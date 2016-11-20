@@ -613,7 +613,6 @@ MonoBehaviour:
     koreographyPlayer: {fileID: 114000013862536388}
     mixer: {fileID: 24100000, guid: da8e4c9bbd9ce491a8f259c369262674, type: 2}
     song: {fileID: 11400000, guid: 5f2dae6cb49e0474a8b2735d2e08fa54, type: 2}
-  delay: 0
 --- !u!114 &114000011764585146
 MonoBehaviour:
   m_ObjectHideFlags: 1

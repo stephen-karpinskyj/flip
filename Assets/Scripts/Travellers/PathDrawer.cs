@@ -47,7 +47,7 @@ public class PathDrawer
         if (allPickupsInPath)
         {
             var track = MusicManager.Instance.Player.CurrentFocusedTrack;
-            MusicManager.Instance.Player.SpawnNextLevelPatterns(track);
+            MusicManager.Instance.Player.SpawnNextLevelPatterns(track, false);
         }
 
         Board.Instance.ForEachPickup(pickup =>
@@ -67,12 +67,12 @@ public class PathDrawer
         {
             var shouldHighlight = this.Path.Contains(tile);
 
-            if (shouldHighlight != tile.DarkBacking.IsHighlighted)
+            if (shouldHighlight != tile.IsHighlighted)
             {
                 tile.Punch();
             }
 
-            tile.DarkBacking.Highlight(shouldHighlight);
+            tile.Highlight(shouldHighlight);
         });
     }
 
