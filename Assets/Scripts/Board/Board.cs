@@ -13,14 +13,27 @@ public class Board : BehaviourSingleton<Board>
     [SerializeField]
     private Traveller travellerPrefab;
 
+    [SerializeField]
+    private List<PickupPrefab> pickupPrefabs;
+
     private Vector2 bottomLeft;
 
     private Tile[,] tiles;
 
+    private List<Pickup> currentPickups;
+
+    public delegate void PickupDestroyCallback(Pickup pickup);
+    public event PickupDestroyCallback OnPickupDestroy = delegate { };
+
     private void Awake()
     {
         this.InitialiseTiles();
+        this.InitialisePickups();
     }
+
+
+    #region Tiles
+
 
     private void InitialiseTiles()
     {
@@ -132,4 +145,120 @@ public class Board : BehaviourSingleton<Board>
             action(tile);
         }
     }
+
+
+    #endregion
+
+
+    #region Pickups
+
+
+    private void InitialisePickups()
+    {
+        this.currentPickups = new List<Pickup>();
+    }
+
+    private Pickup SpawnPickup(PickupPattern pattern, bool isForeground)
+    {
+        var pickup = this.pickupPrefabs.Find(p => p.Type == pattern.Type).Instantiate(this.transform);
+        this.currentPickups.Add(pickup);
+
+        var tile = Board.Instance.GetTile(pattern.Coordinates);
+        pickup.Initialise(tile, isForeground, this.HandlePickupDestroy);
+
+        return pickup;
+    }
+
+    public bool HasPickup(Tile tile, bool includeBackground)
+    {
+        if (tile == null)
+        {
+            return false;
+        }
+
+        var pickup = this.currentPickups.Find(p => p.CurrentTile == tile);
+
+        if (pickup == null)
+        {
+            return false;
+        }
+
+        if (!includeBackground && !pickup.IsForeground)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool HasPickup(bool includeBackground)
+    {
+        if (includeBackground)
+        {
+            return this.currentPickups.Count > 0;
+        }
+
+        return this.currentPickups.Find(p => p.IsForeground) != null;
+    }
+
+    public Pickup AddForegroundPickup(PickupPattern pattern)
+    {
+        var pickup = this.currentPickups.Find(p => p.CurrentTile.Coordinates == pattern.Coordinates);
+
+        if (pickup == null)
+        {
+            pickup = this.SpawnPickup(pattern, true);
+            pickup.Hide(false);
+
+            return pickup;
+        }
+
+        if (!pickup.IsForeground)
+        {
+            pickup.SetForeground(true);
+            pickup.Hide(false);
+
+            return pickup;
+        }
+
+        return pickup;
+    }
+
+    public Pickup AddBackgroundPickup(PickupPattern pattern)
+    {
+        var pickup = this.currentPickups.Find(p => p.CurrentTile.Coordinates == pattern.Coordinates);
+
+        if (pickup == null)
+        {
+            pickup = this.SpawnPickup(pattern, false);
+            pickup.Hide(true);
+
+            return pickup;
+        }
+
+        if (pickup.IsForeground)
+        {
+            return null;
+        }
+
+        return pickup;
+    }
+
+    public void ForEachPickup(Action<Pickup> action)
+    {
+        foreach (var pickup in this.currentPickups)
+        {
+            action(pickup);
+        }
+    }
+
+    private void HandlePickupDestroy(Pickup pickup)
+    {
+        this.currentPickups.Remove(pickup);
+
+        this.OnPickupDestroy(pickup);
+    }
+
+
+    #endregion
 }

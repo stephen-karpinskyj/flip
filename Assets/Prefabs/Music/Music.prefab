@@ -675,8 +675,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba06aeba1380244f8ac527ad59481b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupPrefabs:
-  - type: 0
-    prefab: {fileID: 114000010705721988, guid: 2f4cb4e157b784787ad5641326e5ca9b, type: 2}
-  - type: 1
-    prefab: {fileID: 114000011712610894, guid: 0d636304ae2c04b818c06735e151e323, type: 2}

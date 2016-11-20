@@ -10,6 +10,16 @@ public class SongAction
     [SerializeField]
     private TrackType track;
 
+    public SongActionType Type
+    {
+        get { return this.type; }
+    }
+
+    public TrackType Track
+    {
+        get { return this.track; }
+    }
+
     public void Execute(SongPlayer player)
     {
         switch (this.type)

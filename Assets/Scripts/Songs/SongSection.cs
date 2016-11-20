@@ -8,6 +8,21 @@ public class SongSection
     [SerializeField]
     private List<SongAction> onStart;
 
+    public TrackType FindFocusedTrack()
+    {
+        var track = TrackType.None;
+        
+        foreach (var action in this.onStart)
+        {
+            if (action.Type == SongActionType.FocusTrack)
+            {
+                track = action.Track;
+            }
+        }
+
+        return track;
+    }
+
     public void Start(SongPlayer song)
     {
         foreach (var action in this.onStart)

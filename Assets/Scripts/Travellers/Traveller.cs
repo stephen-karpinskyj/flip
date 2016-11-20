@@ -35,9 +35,9 @@ public class Traveller : BehaviourSingleton<Traveller>
         get { return this.currentDir; }
     }
 
-    public TilePath CurrentPath
+    public PathDrawer PathDrawer
     {
-        get { return this.pathDrawer.Path; }
+        get { return this.pathDrawer; }
     }
 
     private void Awake()
@@ -94,7 +94,7 @@ public class Traveller : BehaviourSingleton<Traveller>
         {
             // Check for pickup
             {
-                var hasPickup = MusicManager.Instance.Player.HasPickup(nextTile);
+                var hasPickup = Board.Instance.HasPickup(nextTile, false);
 
                 if (hasPickup)
                 {
@@ -116,7 +116,7 @@ public class Traveller : BehaviourSingleton<Traveller>
                         break;
                     }
 
-                    var hasPickup = MusicManager.Instance.Player.HasPickup(peekedTile);
+                    var hasPickup = Board.Instance.HasPickup(peekedTile, false);
 
                     if (hasPickup)
                     {
@@ -125,7 +125,6 @@ public class Traveller : BehaviourSingleton<Traveller>
                             nextTile = this.pathDrawer.Path.PopFirstTile();
                         }
 
-                        isStillStepping = false;
                         break;
                     }
 

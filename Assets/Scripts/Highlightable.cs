@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TileHighlightable : BaseMonoBehaviour
+public class Highlightable : BaseMonoBehaviour
 {
     [SerializeField]
     private Renderer rend;

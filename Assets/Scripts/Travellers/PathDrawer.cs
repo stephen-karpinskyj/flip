@@ -4,8 +4,6 @@ using UnityEngine;
 [Serializable]
 public class PathDrawer
 {
-    private Tile currentPressedTile;
-
     public readonly TilePath Path = new TilePath();
     public Tile AllowedStartingTile { get; set; }
     public BoardDirection StartingDirection { get; set; }
@@ -16,68 +14,124 @@ public class PathDrawer
 
         if (isDown)
         {
-            this.currentPressedTile = Board.Instance.GetTile(Input.mousePosition);
-            var pressingLastTile = this.currentPressedTile == this.Path.PeekLastTile();
-            var pressingTileWithPickup = MusicManager.Instance.Player.HasPickup(this.currentPressedTile, true);
+            var pressedTile = Board.Instance.GetTile(Input.mousePosition);
+            BoardDirection dir;
+            var allPickupsInPath = this.IsAllForegroundPickupsInPath();
+            var canReachTile = this.CanReachTile(pressedTile, allPickupsInPath, out dir);
 
-            if (pressingLastTile)
+            if (canReachTile)
             {
-                this.currentPressedTile = this.Path.PopLastTile();
-                var isRollingBack = true;
-
-                while (isRollingBack)
+                if (!MusicManager.Instance.Player.HasStarted)
                 {
-                    this.currentPressedTile = this.Path.PeekLastTile();
-
-                    if (this.currentPressedTile == null || MusicManager.Instance.Player.HasPickup(this.currentPressedTile, true))
-                    {
-                        isRollingBack = false;
-                    }
-                    else
-                    {
-                        this.currentPressedTile = this.Path.PopLastTile();
-                    }
+                    MusicManager.Instance.Player.Play();
                 }
-            }
-            else if (pressingTileWithPickup)
-            {
-//                var pressingStartTile = this.currentPressedTile == this.AllowedStartingTile;
-//
-//                if (pressingStartTile)
-//                {
-//                    this.Path.Clear();
-//                }
-
-                var lastTile = this.AllowedStartingTile;
-                var inDirection = this.StartingDirection;
-                var fromDirection = inDirection;
 
                 if (this.Path.IsClear())
                 {
-                    this.Path.PushTile(this.AllowedStartingTile, null, inDirection);
-                }
-                else
-                {
-                    // Change from direction to be from end of drawn path
-                    lastTile = this.Path.PeekLastTile();
-                    fromDirection.Set(this.Path.PeekSecondLastTile(), lastTile);
+                    this.Path.PushTile(this.AllowedStartingTile, this.StartingDirection);
                 }
 
-                inDirection.Set(lastTile, this.currentPressedTile, fromDirection);
-                this.Path.PushTile(this.currentPressedTile, this.AllowedStartingTile, inDirection);
+                this.Path.PushTile(pressedTile, dir);
             }
         }
 
-        Board.Instance.ForEachTile(t =>
-        {
-            var shouldHighlight = this.Path.Contains(t);
+        this.UpdatePickups();
+        this.UpdateTiles();
+    }
 
-            if (shouldHighlight != t.Border.IsHighlighted)
+    private void UpdatePickups()
+    {
+        var allPickupsInPath = this.IsAllForegroundPickupsInPath();
+
+        // HACK
+        if (allPickupsInPath)
+        {
+            var track = MusicManager.Instance.Player.CurrentFocusedTrack;
+            MusicManager.Instance.Player.SpawnNextLevelPatterns(track);
+        }
+
+        Board.Instance.ForEachPickup(pickup =>
+        {
+            pickup.Hide(!pickup.IsForeground && !allPickupsInPath);
+
+            BoardDirection dir;
+            var canReachPickup = this.CanReachTile(pickup.CurrentTile, allPickupsInPath, out dir);
+            var isInPath = this.Path.Contains(pickup.CurrentTile);
+            pickup.SetPickupable(canReachPickup || isInPath);
+        });
+    }
+
+    private void UpdateTiles()
+    {
+        Board.Instance.ForEachTile(tile =>
+        {
+            var shouldHighlight = this.Path.Contains(tile);
+
+            if (shouldHighlight != tile.DarkBacking.IsHighlighted)
             {
-                t.Punch();
+                tile.Punch();
             }
 
-            t.Border.Highlight(shouldHighlight);
+            tile.DarkBacking.Highlight(shouldHighlight);
         });
+    }
+
+    private bool CanReachTile(Tile tile, bool includeBackground, out BoardDirection inDirection)
+    {
+        inDirection = this.StartingDirection;
+
+        var tileIsInPath = this.Path.Contains(tile);
+
+        if (tileIsInPath)
+        {
+            return false;
+        }
+
+        var tileHasPickup = Board.Instance.HasPickup(tile, includeBackground);
+
+        if (!tileHasPickup)
+        {
+            return false;
+        }
+
+        var lastTile = this.Path.PeekLastTile() ?? this.AllowedStartingTile;
+        var fromDirection = inDirection;
+
+        if (!this.Path.IsClear())
+        {
+            // Change from direction to be from end of drawn path
+            fromDirection.Set(this.Path.PeekSecondLastTile(), lastTile);
+        }
+
+        inDirection.Set(lastTile, tile, fromDirection);
+
+        var pathSection = Board.Instance.Pathfind(lastTile, tile, inDirection);
+        var canPathfindToTile = true;
+
+        foreach (var t in pathSection)
+        {
+            if (t != lastTile && this.Path.Contains(t))
+            {
+                canPathfindToTile = false;
+                break;
+            }
+        }
+
+        return canPathfindToTile;
+    }
+
+    private bool IsAllForegroundPickupsInPath()
+    {
+        var foregroundPickupNotInPath = false;
+
+        Board.Instance.ForEachPickup(pickup =>
+        {
+            if (!foregroundPickupNotInPath && pickup.IsForeground)
+            {
+                foregroundPickupNotInPath |= !this.Path.Contains(pickup.CurrentTile);
+            }
+        });
+
+        return !foregroundPickupNotInPath;
     }
 }

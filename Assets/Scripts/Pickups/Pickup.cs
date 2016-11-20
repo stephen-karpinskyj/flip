@@ -17,7 +17,12 @@ public abstract class Pickup : BaseMonoBehaviour
     [SerializeField]
     private PunchTweenerData punchTweenerData;
 
-    private PickupLayer currentLayer;
+    [SerializeField]
+    private Highlightable backing;
+
+    private bool isHidden;
+    private bool isDestroying;
+    private bool isPickupable;
 
     private Tile currentTile;
 
@@ -27,10 +32,7 @@ public abstract class Pickup : BaseMonoBehaviour
     public delegate void DestroyCallback(Pickup pickup);
     private DestroyCallback onDestroy;
 
-    public PickupLayer CurrentLayer
-    {
-        get { return this.currentLayer; }
-    }
+    public bool IsForeground { get; private set; }
 
     public Tile CurrentTile
     {
@@ -39,8 +41,6 @@ public abstract class Pickup : BaseMonoBehaviour
 
     protected virtual void Awake()
     {
-        this.currentLayer = PickupLayer.Foreground;
-
         this.defaultScale = this.transform.localScale;
         this.defaultTransparency = this.outerBackingRenderer.material.color.a;
     }
@@ -64,46 +64,75 @@ public abstract class Pickup : BaseMonoBehaviour
         }
     }
 
-    public void Initialise(Tile tile, PickupLayer layer, DestroyCallback onDestroy = null)
+    public void Initialise(Tile tile, bool isForeground, DestroyCallback onDestroy = null)
     {
+        if (this.isDestroying)
+        {
+            return;
+        }
+
         this.currentTile = tile;
         this.transform.position = this.currentTile.transform.position;
 
-        this.SetLayer(layer);
+        this.SetForeground(isForeground);
 
         this.onDestroy = onDestroy;
     }
 
-    public void SetLayer(PickupLayer layer)
+    public void SetForeground(bool isForeground)
     {
-        this.currentLayer = layer;
+        if (this.isDestroying)
+        {
+            return;
+        }
+
+        this.IsForeground = isForeground;
 
         var color = this.outerBackingRenderer.material.color;
 
-        if (this.currentLayer == PickupLayer.Background)
-        {
-            color.a = BackgroundTransparency;
-        }
-        else if (this.currentLayer == PickupLayer.Foreground)
+        if (this.IsForeground)
         {
             color.a = this.defaultTransparency;
+        }
+        else
+        {
+            color.a = BackgroundTransparency;
         }
 
         this.outerBackingRenderer.material.color = color;
 
-        this.Punch();
+        this.Punch(true);
     }
 
-    private void Punch()
+    public void SetPickupable(bool isPickupable)
+    {
+        this.isPickupable = isPickupable;
+
+        this.backing.Highlight(this.isPickupable);
+    }
+
+    private void Punch(bool force)
     {
         var scale = defaultScale;
 
-        if (this.currentLayer == PickupLayer.Background)
+        if (!this.IsForeground)
         {
             scale *= this.backgroundScaleMultiplier;
         }
 
-        this.transform.DOPunchScale(this.punchTweenerData, scale);
+        if (!force && (!this.isPickupable || this.isDestroying))
+        {
+            this.transform.localScale = scale;
+        }
+        else
+        {
+            this.transform.DOPunchScale(this.punchTweenerData, scale);
+        }
+    }
+
+    public void Hide(bool hide)
+    {
+        this.gameObject.SetActive(!hide);
     }
 
     private void ScaleDown(TweenCallback onComplete)
@@ -114,20 +143,30 @@ public abstract class Pickup : BaseMonoBehaviour
 
     private void HandleTrackNoteEvent(TrackType track, int value)
     {
-        if (this.currentLayer == PickupLayer.Background || value < 0)
+        if (this.isDestroying || !this.IsForeground)
         {
             return;
         }
 
-        this.Punch();
+        if (value >= 0)
+        {
+            this.Punch(false);
+        }
     }
 
     private void HandleTravellerStep(Tile tile)
     {
-        if (this.currentLayer == PickupLayer.Background || tile != this.currentTile)
+        if (this.isDestroying || !this.IsForeground)
         {
             return;
         }
+
+        if (tile != this.currentTile)
+        {
+            return;
+        }
+
+        this.isDestroying = true;
 
         this.OnPickup();
 

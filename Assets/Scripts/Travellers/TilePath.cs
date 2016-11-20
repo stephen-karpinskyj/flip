@@ -21,7 +21,7 @@ public class TilePath
         return tile != null && this.tiles.Contains(tile);
     }
 
-    public void PushTile(Tile tile, Tile tileToClearOn, BoardDirection inDirection)
+    public void PushTile(Tile tile, BoardDirection inDirection)
     {
         if (!this.IsValidTile(tile))
         {
@@ -33,7 +33,7 @@ public class TilePath
         // First tile
         if (lastTile == null)
         {
-            this.AddTile(tile, tileToClearOn);
+            this.AddTile(tile);
             return;
         }
 
@@ -43,7 +43,7 @@ public class TilePath
         {
             if (this.IsValidTile(nextTile))
             {
-                this.AddTile(nextTile, tileToClearOn);
+                this.AddTile(nextTile);
             }
         }
     }
@@ -59,19 +59,6 @@ public class TilePath
         this.tiles.RemoveAt(0);
 
         return first;
-    }
-
-    public Tile PopLastTile()
-    {
-        if (this.tiles.Count <= 0)
-        {
-            return null;
-        }
-
-        var last = this.PeekLastTile();
-        this.tiles.RemoveAt(this.tiles.Count - 1);
-
-        return last;
     }
 
     public Tile PeekFirstTile()
@@ -90,54 +77,14 @@ public class TilePath
         return index <= 0 || index >= this.tiles.Count ? null : this.tiles[index];
     }
 
-    public Tile PeekPrevTile(Tile tile)
-    {
-        var index = this.tiles.IndexOf(tile) - 1;
-        return index <= 0 || index >= this.tiles.Count ? null : this.tiles[index];
-    }
-
     public Tile PeekSecondLastTile()
     {
         return this.tiles.Count <= 1 ? null : this.tiles[this.tiles.Count - 2];
     }
 
-    public void ForEachTile(Action<Tile> action)
+    private void AddTile(Tile tile)
     {
-        foreach (var tile in this.tiles)
-        {
-            action(tile);
-        }
-    }
-
-    private void AddTile(Tile tile, Tile tileToClearOn)
-    {
-//        if (this.Contains(tile))
-//        {
-//            this.TrimToTile(tile);
-//        }
-//
-//        if (tile == tileToClearOn)
-//        {
-//            this.Clear();
-//        }
-
         this.tiles.Add(tile);
-    }
-
-    private void TrimToTile(Tile tile)
-    {
-        if (tile == null)
-        {
-            return;
-        }
-
-        var startTrimIndex = this.tiles.IndexOf(tile);
-        var countToTrim = this.tiles.Count - startTrimIndex;
-
-        if (startTrimIndex >= 0 && countToTrim > 0)
-        {
-            this.tiles.RemoveRange(startTrimIndex, countToTrim);
-        }
     }
 
     private bool IsValidTile(Tile tile)

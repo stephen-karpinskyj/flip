@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using SonicBloom.Koreo;
-using System;
 
 public class SongPlayer
 {
@@ -17,10 +17,6 @@ public class SongPlayer
     public delegate void SongEndCallback();
     public event SongEndCallback OnSongEnd = delegate { };
 
-    //TOOD: Move to Board
-    public delegate void PickupDestroyCallback(Pickup pickup);
-    public event PickupDestroyCallback OnPickupDestroy = delegate { };
-
     private readonly SongPlayerData data;
 
     private int currentBeat;
@@ -29,7 +25,6 @@ public class SongPlayer
     private int currentSection;
     private TrackType currentFocusedTrack;
 
-    private List<Pickup> currentPickups; // TODO: Move to Board
     private Dictionary<TrackType, int> currentTrackLevels;
     private bool canMoveToNextSection;
 
@@ -48,6 +43,16 @@ public class SongPlayer
         get { return this.canMoveToNextSection; }
     }
 
+    public TrackType CurrentFocusedTrack
+    {
+        get { return this.currentFocusedTrack; }
+    }
+
+    public bool HasStarted
+    {
+        get { return this.data.KoreographyPlayer.IsPlaying; }
+    }
+
     public SongPlayer(SongPlayerData data)
     {
         this.data = data;
@@ -58,11 +63,14 @@ public class SongPlayer
         this.currentSection = -1;
         this.currentFocusedTrack = TrackType.None;
 
-        this.currentPickups = new List<Pickup>();
         this.currentTrackLevels = new Dictionary<TrackType, int>();
         this.canMoveToNextSection = true;
 
         this.ListenToEvents();
+
+        this.SpawnNextSectionStartPatterns();
+
+        Board.Instance.OnPickupDestroy += this.HandlePickupDestroy; // TODO: Unsub
     }
 
     public void Play()
@@ -86,28 +94,6 @@ public class SongPlayer
         Debug.Log("[Song] Ending section=" + this.currentSection);
 
         this.canMoveToNextSection = true;
-    }
-
-    public bool HasPickup(Tile tile, bool includeAllLayers = false)
-    {
-        if (tile == null)
-        {
-            return false;
-        }
-
-        var pickup = this.currentPickups.Find(p => p.CurrentTile == tile);
-
-        if (pickup == null)
-        {
-            return false;
-        }
-
-        if (!includeAllLayers && pickup.CurrentLayer != PickupLayer.Foreground)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     private void ListenToEvents()
@@ -155,12 +141,14 @@ public class SongPlayer
 
     private void StartLevel()
     {
-        var newLevel = this.GetCurrentTrackLevel() + 1;
+        var newLevel = this.GetTrackLevel(this.currentFocusedTrack) + 1;
         var newLevelPatterns = this.data.Song.GetPickupPattern(this.currentFocusedTrack, newLevel);
 
         if (newLevelPatterns == null)
         {
             this.EndSection();
+
+            this.SpawnNextSectionStartPatterns();
         }
         else
         {
@@ -170,41 +158,16 @@ public class SongPlayer
 
             foreach (var pattern in newLevelPatterns.Patterns)
             {
-                var pickup = this.currentPickups.Find(p => p.CurrentLayer == PickupLayer.Background && p.CurrentTile.Coordinates == pattern.Coordinates);
-                if (pickup == null)
-                {
-                    this.SpawnPickup(pattern, PickupLayer.Foreground);
-                }
-                else
-                {
-                    pickup.SetLayer(PickupLayer.Foreground);
-                }
+                Board.Instance.AddForegroundPickup(pattern);
             }
 
-            var nextLevelPatterns = this.data.Song.GetPickupPattern(this.currentFocusedTrack, newLevel + 1);
-
-            if (nextLevelPatterns != null)
-            {
-                foreach (var pattern in nextLevelPatterns.Patterns)
-                {
-                    this.SpawnPickup(pattern, PickupLayer.Background);
-                }
-            }
+            this.SpawnNextLevelPatterns(this.currentFocusedTrack);
 
             if (this.CanMoveToNextLevel())
             {
                 this.StartLevel();
             }
         }
-    }
-
-    private void SpawnPickup(PickupPattern pattern, PickupLayer layer)
-    {                
-        var pickup = MusicManager.Instance.CreatePickup(pattern.Type);
-        this.currentPickups.Add(pickup);
-
-        var tile = Board.Instance.GetTile(pattern.Coordinates);
-        pickup.Initialise(tile, layer, this.HandlePickupDestroy);
     }
 
     private void StartSection()
@@ -237,26 +200,21 @@ public class SongPlayer
 
     private int GetCurrentMinNoteValue()
     {
-        var level = this.GetCurrentTrackLevel();
+        var level = this.GetTrackLevel(this.currentFocusedTrack);
         var levelPatterns = this.data.Song.GetPickupPattern(this.currentFocusedTrack, level);
         return levelPatterns == null ? -1 : levelPatterns.MinNoteValue;
     }
 
-    private int GetCurrentTrackLevel()
+    private int GetTrackLevel(TrackType track)
     {
         int level;
 
-        if (this.currentTrackLevels.TryGetValue(this.currentFocusedTrack, out level))
-        {
-            return level;
-        }
-
-        return -1;
+        return this.currentTrackLevels.TryGetValue(track, out level) ? level : -1;
     }
 
     private bool CanMoveToNextLevel()
     {
-        return this.currentPickups.Find(p => p.CurrentLayer == PickupLayer.Foreground) == null;
+        return !Board.Instance.HasPickup(false);
     }
 
     private void SetCurrentTrackLevel(int level)
@@ -264,9 +222,34 @@ public class SongPlayer
         this.currentTrackLevels[this.currentFocusedTrack] = level;
     }
 
+    public void SpawnNextLevelPatterns(TrackType track)
+    {
+        var nextLevel = this.GetTrackLevel(track) + 1;
+        var nextLevelPatterns = this.data.Song.GetPickupPattern(track, nextLevel);
+
+        if (nextLevelPatterns != null)
+        {
+            foreach (var pattern in nextLevelPatterns.Patterns)
+            {
+                Board.Instance.AddBackgroundPickup(pattern);
+            }
+        }
+    }
+
+    private void SpawnNextSectionStartPatterns()
+    {
+        var nextSection = this.data.Song.GetSection(this.currentSection + 1);
+
+        if (nextSection != null)
+        {
+            var track = nextSection.FindFocusedTrack();
+            this.SpawnNextLevelPatterns(track);
+        }
+    }
+
     private void HandleTrackEvent(KoreographyEvent ev, TrackType track)
     {
-        if (track != this.currentFocusedTrack)
+        if (this.IsEndingSection || track != this.currentFocusedTrack)
         {
             return;
         }
@@ -283,13 +266,9 @@ public class SongPlayer
 
     private void HandlePickupDestroy(Pickup pickup)
     {
-        this.currentPickups.Remove(pickup);
-
         if (this.CanMoveToNextLevel())
         {
             this.StartLevel();
         }
-
-        this.OnPickupDestroy(pickup);
     }
 }

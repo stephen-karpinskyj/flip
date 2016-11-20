@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4000010138471242}
-  - component: {fileID: 114000010574807274}
+  - component: {fileID: 114000010025872622}
   - component: {fileID: 212000013689846844}
   m_Layer: 0
   m_Name: InnerBacking
@@ -101,7 +101,7 @@ Transform:
   m_Father: {fileID: 4000011559454728}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114000010574807274
+--- !u!114 &114000010025872622
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -109,13 +109,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013132427902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f695e3a35c34844fea39676edc8a527c, type: 3}
+  m_Script: {fileID: 11500000, guid: 180dcc2e250bb4f89aee4d2f25d86c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inDuration: 0.05
-  outDuration: 0.15
-  target: {r: 0.44705886, g: 0.80392164, b: 0.9294118, a: 1}
   rend: {fileID: 212000013689846844}
+  highlightedColor: {r: 0.7372703, g: 0.8944797, b: 0.9843137, a: 1}
 --- !u!114 &114000010705721988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -129,13 +127,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleDownDuration: 0.075
   backgroundScaleMultiplier: 0.5
-  backgroundTransparency: 0.6
   outerBackingRenderer: {fileID: 212000012001463742}
   punchTweenerData:
     punch: {x: 1.1, y: 1.1, z: 1.1}
     duration: 0.1
     vibrato: 80
     elasticity: 0.5
+  backing: {fileID: 114000010025872622}
 --- !u!212 &212000012001463742
 SpriteRenderer:
   m_ObjectHideFlags: 1

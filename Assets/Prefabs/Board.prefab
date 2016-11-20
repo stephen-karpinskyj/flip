@@ -58,3 +58,8 @@ MonoBehaviour:
     type: 2}
   travellerPrefab: {fileID: 114000012277045022, guid: 5090aa525ab9e4f4a90c3a989143c7ae,
     type: 2}
+  pickupPrefabs:
+  - type: 0
+    prefab: {fileID: 114000010705721988, guid: 2f4cb4e157b784787ad5641326e5ca9b, type: 2}
+  - type: 1
+    prefab: {fileID: 114000011712610894, guid: 0d636304ae2c04b818c06735e151e323, type: 2}
