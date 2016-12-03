@@ -10,6 +10,7 @@ GameObject:
   - component: {fileID: 430534}
   - component: {fileID: 8216042}
   - component: {fileID: 11488462}
+  - component: {fileID: 114489699901021648}
   m_Layer: 0
   m_Name: InAudioMusicPlayer
   m_TagString: Untagged
@@ -85,7 +86,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -109,7 +110,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!114 &11488462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -132,3 +133,25 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 112078}
   m_IsPrefabParent: 1
+--- !u!114 &114489699901021648
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 112078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19242b74995c0e44a8799397a6b0059a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _guid: 0
+  _type: 0
+  _nodeData: {fileID: 0}
+  Name: 
+  _parent: {fileID: 0}
+  OverrideParentMixerGroup: 0
+  MixerGroup: {fileID: 0}
+  _children: []
+  Filtered: 0
+  FoldedOut: 0
+  ScrollPosition: {x: 0, y: 0}

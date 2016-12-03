@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialSize: 10
-  ChunkSize: 10
+  ChunkSize: 6
   Prefab: {fileID: 100000, guid: d1c892e1fdf0e034d8c04ec711756446, type: 2}
   Prefix: InAudio Player
 --- !u!114 &11400006
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialSize: 10
-  ChunkSize: 10
+  ChunkSize: 6
   Prefab: {fileID: 100000, guid: a5c8ab0180b45a54a8669cab79651f08, type: 2}
   Prefix: InAudio Player Controller
 --- !u!114 &11400008
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialSize: 10
-  ChunkSize: 10
+  ChunkSize: 6
   Prefab: {fileID: 112078, guid: e3e5debf9ce848f42956b1eff1262f9c, type: 2}
   Prefix: InAudio Music
 --- !u!114 &11477966

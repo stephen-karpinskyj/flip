@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SonicBloom.Koreo;
+using InAudioSystem;
 
 public class SongPlayer
 {
@@ -17,7 +18,7 @@ public class SongPlayer
     public delegate void SongEndCallback();
     public event SongEndCallback OnSongEnd = delegate { };
 
-    private readonly SongPlayerData data;
+    private readonly Song song;
 
     private int currentBeat;
     private int currentScoreBeat;
@@ -48,14 +49,11 @@ public class SongPlayer
         get { return this.currentFocusedTrack; }
     }
 
-    public bool HasStarted
-    {
-        get { return this.data.KoreographyPlayer.IsPlaying; }
-    }
+    public bool HasStarted { get; private set; }
 
-    public SongPlayer(SongPlayerData data)
+    public SongPlayer(Song song)
     {
-        this.data = data;
+        this.song = song;
 
         this.currentBeat = -1;
         this.currentScoreBeat = 0;
@@ -76,13 +74,29 @@ public class SongPlayer
 
     public void Play()
     {
-        this.data.KoreographyPlayer.Play();
+        this.HasStarted = true;
+
+        // SK: HACK: Ideally can only start playing one track and then cue up new tracks at right time
+        foreach (var track in Enum.GetValues(typeof(TrackType)))
+        {
+            var group = MusicPlayer.GetGroup(track.ToString());
+
+            if (group != null)
+            {
+                group.Volume = 0f;
+                InAudio.Music.Play(group);
+            }
+        }
     }
 
     public void StartTrack(TrackType track, bool start)
     {
-        var volumeParameter = track + "_Volume";
-        this.data.Mixer.SetFloat(volumeParameter, start ? 0f : -80f);
+        var group = MusicPlayer.GetGroup(track.ToString());
+
+        if (group != null)
+        {
+            group.Volume = start ? group._minVolume : 0f;
+        }
     }
 
     public void FocusTrack(TrackType track)
@@ -100,51 +114,18 @@ public class SongPlayer
 
     private void ListenToEvents()
     {
-        this.data.Koreographer.RegisterForEvents(TrackType.Beat.ToString(), this.HandleBeatTrackEvent);
+        Koreographer.Instance.RegisterForEvents(TrackType.Beat.ToString(), this.HandleBeatTrackEvent);
 
-        this.data.Koreographer.RegisterForEvents(TrackType.Beat.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Beat));
-        this.data.Koreographer.RegisterForEvents(TrackType.Piano.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Piano));
-        this.data.Koreographer.RegisterForEvents(TrackType.HiHat.ToString(), ev => this.HandleTrackEvent(ev, TrackType.HiHat));
-        this.data.Koreographer.RegisterForEvents(TrackType.Triangle.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Triangle));
-        this.data.Koreographer.RegisterForEvents(TrackType.Pipa.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Pipa));
-    }
-
-    private void HandleBeatTrackEvent(KoreographyEvent ev)
-    {
-        var moveToNextMeasure = ev.HasIntPayload() && ev.GetIntValue() >= 0;
-
-        if (moveToNextMeasure)
-        {
-            this.currentBeat = 0;
-
-            this.currentMeasure++;
-
-            this.OnMeasureChange(this.currentMeasure);
-        }
-        else
-        {
-            this.currentBeat++;
-        }
-
-        if (!this.canMoveToNextSection)
-        {
-            this.currentScoreBeat++;
-            this.OnScoreBeat(this.currentScoreBeat);
-        }
-
-        var measureProgress = this.currentMeasure % this.currentFocusedTrack.GetLengthInMeasures();
-
-        if (this.currentBeat == 0 && measureProgress == 0 && this.canMoveToNextSection)
-        {
-            this.currentSection++;
-            this.StartSection();
-        }
+        Koreographer.Instance.RegisterForEvents(TrackType.Piano.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Piano));
+        Koreographer.Instance.RegisterForEvents(TrackType.HiHat.ToString(), ev => this.HandleTrackEvent(ev, TrackType.HiHat));
+        Koreographer.Instance.RegisterForEvents(TrackType.Triangle.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Triangle));
+        Koreographer.Instance.RegisterForEvents(TrackType.Pipa.ToString(), ev => this.HandleTrackEvent(ev, TrackType.Pipa));
     }
 
     private void StartLevel()
     {
         var newLevel = this.GetTrackLevel(this.currentFocusedTrack) + 1;
-        var newLevelPatterns = this.data.Song.GetPickupPattern(this.currentFocusedTrack, newLevel);
+        var newLevelPatterns = this.song.GetPickupPattern(this.currentFocusedTrack, newLevel);
 
         if (newLevelPatterns == null)
         {
@@ -177,7 +158,7 @@ public class SongPlayer
         this.canMoveToNextSection = false;
         Traveller.Instance.MakeActive(this.canMoveToNextSection);
 
-        var section = this.data.Song.GetSection(this.currentSection);
+        var section = this.song.GetSection(this.currentSection);
 
         if (section == null)
         {
@@ -204,7 +185,7 @@ public class SongPlayer
     private int GetCurrentMinNoteValue()
     {
         var level = this.GetTrackLevel(this.currentFocusedTrack);
-        var levelPatterns = this.data.Song.GetPickupPattern(this.currentFocusedTrack, level);
+        var levelPatterns = this.song.GetPickupPattern(this.currentFocusedTrack, level);
         return levelPatterns == null ? -1 : levelPatterns.MinNoteValue;
     }
 
@@ -228,7 +209,7 @@ public class SongPlayer
     public void SpawnNextLevelPatterns(TrackType track, bool foreground)
     {
         var nextLevel = this.GetTrackLevel(track) + 1;
-        var nextLevelPatterns = this.data.Song.GetPickupPattern(track, nextLevel);
+        var nextLevelPatterns = this.song.GetPickupPattern(track, nextLevel);
 
         if (nextLevelPatterns != null)
         {
@@ -248,12 +229,49 @@ public class SongPlayer
 
     private void SpawnNextSectionStartPatterns(bool foreground)
     {
-        var nextSection = this.data.Song.GetSection(this.currentSection + 1);
+        var nextSection = this.song.GetSection(this.currentSection + 1);
 
         if (nextSection != null)
         {
             var track = nextSection.FindFocusedTrack();
             this.SpawnNextLevelPatterns(track, foreground);
+        }
+    }
+
+    private void HandleBeatTrackEvent(KoreographyEvent ev)
+    {
+        var moveToNextMeasure = ev.HasIntPayload() && ev.GetIntValue() >= 0;
+
+        if (moveToNextMeasure)
+        {
+            this.currentBeat = 0;
+
+            this.currentMeasure++;
+
+            this.OnMeasureChange(this.currentMeasure);
+        }
+        else
+        {
+            this.currentBeat++;
+        }
+
+        if (!this.canMoveToNextSection)
+        {
+            this.currentScoreBeat++;
+            this.OnScoreBeat(this.currentScoreBeat);
+        }
+
+        var lengthInMeasures = (int)Koreographer.Instance.GetMusicBeatLength(this.currentFocusedTrack.ToString()) / 4;
+        var measureProgress = 0;
+        if (lengthInMeasures > 0)
+        {
+            measureProgress = this.currentMeasure % lengthInMeasures;
+        }
+
+        if (this.currentBeat == 0 && measureProgress == 0 && this.canMoveToNextSection)
+        {
+            this.currentSection++;
+            this.StartSection();
         }
     }
 

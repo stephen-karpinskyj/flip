@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mEventID: Piano
   mEventList:
-  - mStartSample: 0
-    mEndSample: 0
+  - mStartSample: 2000
+    mEndSample: 2000
   - mStartSample: 41343
     mEndSample: 41343
   - mStartSample: 51679

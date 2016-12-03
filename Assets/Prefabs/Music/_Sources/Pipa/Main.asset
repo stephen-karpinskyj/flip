@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mEventID: Pipa
   mEventList:
-  - mStartSample: 3
-    mEndSample: 3
+  - mStartSample: 0
+    mEndSample: 0
   - mStartSample: 21689
     mEndSample: 21689
   - mStartSample: 41656

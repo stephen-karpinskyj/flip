@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mEventID: HiHat
   mEventList:
-  - mStartSample: 3
-    mEndSample: 3
+  - mStartSample: 0
+    mEndSample: 0
   - mStartSample: 10192
     mEndSample: 10192
   - mStartSample: 20671

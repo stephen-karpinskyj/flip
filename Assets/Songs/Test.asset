@@ -286,7 +286,7 @@ MonoBehaviour:
           y: 3
   - track: 3
     levels:
-    - minNoteValue: 1
+    - minNoteValue: 2
       patterns:
       - type: 0
         position:
