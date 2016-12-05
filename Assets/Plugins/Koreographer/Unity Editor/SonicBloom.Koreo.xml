@@ -2476,6 +2476,25 @@
             event driving.
             </summary>
         </member>
+        <member name="P:SonicBloom.Koreo.Players.AudioSourceVisor.ScheduledPlayTime">
+            <summary>
+            Gets or sets the scheduled play time of the associated AudioSource. This is required
+            for properly handling scheduled playback because Unity does not have a way to inspect
+            the scheduled state of an AudioClip in an AudioSource.
+            </summary>
+            <value>The DSP time at which audio playback is set to begin.</value>
+        </member>
+        <member name="M:SonicBloom.Koreo.Players.AudioSourceVisor.ResyncTimings(System.Int32)">
+            <summary>
+                <para>This method should be called when the <c>AudioSource</c> being watched is seeked to ensure
+            proper timing updates. Specify the seek position in samples with the
+            <paramref name="targetSampleTime" /> parameter.</para>
+                <para>This should also be used if the <c>AudioClip</c> loaded into the <c>AudioSource</c>
+            changes.</para>
+            </summary>
+            <param name="targetSampleTime">The sample position to which the <c>AudioSource</c> was seeked.
+            The value will be internally clamped between [0, totalSamplesInClip - 1).</param>
+        </member>
         <member name="T:SonicBloom.Koreo.Players.AudioClipID">
             <summary>
             A struct to hold information that uniquely identifies an
@@ -2532,7 +2551,7 @@
         </member>
         <member name="P:SonicBloom.Koreo.Players.AudioVisor.ScheduledPlayTime">
             <summary>
-            Gets or sets the scheduled play time of the associated AudioSoure. This is required
+            Gets or sets the scheduled play time of the associated AudioSource. This is required
             for properly handling scheduled playback because Unity does not have a way to inspect
             the scheduled state of an AudioClip in an AudioSource.
             </summary>
@@ -2540,10 +2559,22 @@
         </member>
         <member name="M:SonicBloom.Koreo.Players.AudioVisor.ResyncTimings">
             <summary>
-            This is used when the <c>AudioSource</c> has a clip change or a jump within the audio.
-            The AudioVisor attempts to catch "seeks" automatically.  Using this is far
-            better.
+            This is used when the <c>AudioSource</c> has a clip change or a jump within the audio. The
+            <c>AudioVisor</c> attempts to catch "seeks" automatically, but can't guarantee perfect timing.
+            This forces the <c>AudioVisor</c> to resync to the sample time reported by the
+            <c>AudioSource</c> at time of call. Using this is far better than allowing the <c>AudioVisor</c>
+            to estimate the seeked position.
             </summary>
+        </member>
+        <member name="M:SonicBloom.Koreo.Players.AudioVisor.ResyncTimings(System.Int32)">
+            <summary>
+            This is used when the <c>AudioSource</c> has a clip change or a jump within the audio. The
+            <c>AudioVisor</c> attempts to catch "seeks" automatically, but can't guarantee perfect timing.
+            This forces the <c>AudioVisor</c> to resync to the sample position supplied in the
+            <paramref name="targetSampleTime" /> parameter. Using this is far better than allowing the
+            <c>AudioVisor</c> to estimate the seeked position.
+            </summary>
+            <param name="targetSampleTime">The sample position to which the <c>AudioSource</c> was seeked.</param>
         </member>
         <member name="M:SonicBloom.Koreo.Players.AudioVisor.GetCurrentTimeInSamples">
             <summary>
