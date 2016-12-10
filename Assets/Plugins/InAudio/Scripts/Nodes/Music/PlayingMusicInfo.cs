@@ -22,7 +22,6 @@ namespace InAudioSystem
         public float FinalVolume; //The result of itself, the parent and any mute/solo actions
 
         public double StartedAtDSPTime;
-        public double Progress;
 
         public bool AffectedByMute; //Is currently muted?
 

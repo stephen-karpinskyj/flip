@@ -408,10 +408,15 @@ namespace InAudioSystem
             }
             for (int i = 0; i < musicGroup._children.Count; i++)
             {
-                double time = GetRemainingTime(musicGroup);
-                if (time > maxTime)
+                var child = musicGroup._children[i] as InMusicGroup;
+
+                if (child != null)
                 {
-                    maxTime = time;
+                    double time = GetRemainingTime(child);
+                    if (time > maxTime)
+                    {
+                        maxTime = time;
+                    }
                 }
             }
 
@@ -488,6 +493,7 @@ namespace InAudioSystem
             {
                 var player = musicPool.GetObject();
                 toPlay.PlayingInfo.Players.Add(player);
+                toPlay.PlayingInfo.StartedAtDSPTime = playTime;
                 player.clip = editorClips[j];
                 player.loop = toPlay._loop;
                 player.timeSamples = skipSamples;
