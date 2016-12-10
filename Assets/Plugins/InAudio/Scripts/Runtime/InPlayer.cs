@@ -677,6 +677,15 @@ public class InPlayer : MonoBehaviour
             source.spatialBlend *= audioParameters.SpatialBlend;
             source.timeSamples = (int) (lengthOffset);
             source.PlayScheduled(playAtDSPTime);
+
+            // SK: Koreographer integration
+            var visor = Current.GetComponent<SonicBloom.Koreo.Players.AudioSourceVisor>();
+            if (!visor)
+            {
+                visor = Current.gameObject.AddComponent<SonicBloom.Koreo.Players.AudioSourceVisor>();
+            }
+            visor.ScheduledPlayTime = playAtDSPTime;
+            visor.ResyncTimings(0);
         }
         else
         {

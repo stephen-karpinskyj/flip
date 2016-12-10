@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace InAudioSystem
 {
-    public class MusicPlayer : MonoBehaviour
+    public class MusicPlayer : MonoBehaviour, SonicBloom.Koreo.IKoreographedPlayer // SK: Koreographer integration
     {
         #region Play
         public void Play(InMusicGroup toPlay)
@@ -493,6 +493,15 @@ namespace InAudioSystem
                 player.timeSamples = skipSamples;
                 player.outputAudioMixerGroup = mixer;
                 player.PlayScheduled(playTime);
+
+                // SK: Koreographer integration
+                var visor = player.GetComponent<SonicBloom.Koreo.Players.AudioSourceVisor>();
+                if (!visor)
+                {
+                    visor = player.gameObject.AddComponent<SonicBloom.Koreo.Players.AudioSourceVisor>();
+                }
+                visor.ScheduledPlayTime = playTime;
+                visor.ResyncTimings(0);
             }
 
 
@@ -588,6 +597,9 @@ namespace InAudioSystem
                 CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
                 MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
                 AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+
+                // SK: Koreographer integration
+                SonicBloom.Koreo.Koreographer.Instance.musicPlaybackController = this;
             }
             else
             {
@@ -615,6 +627,137 @@ namespace InAudioSystem
                 }
 
             }
+        }
+
+        #endregion
+
+
+        #region SK: Koreographer integration
+
+        private void OnEnable()
+        {
+            SonicBloom.Koreo.Koreographer.Instance.musicPlaybackController = this;
+        }
+
+        private void OnDisable()
+        {
+            if (SonicBloom.Koreo.Koreographer.Instance != null && (MusicPlayer)SonicBloom.Koreo.Koreographer.Instance.musicPlaybackController == this)
+            {
+                SonicBloom.Koreo.Koreographer.Instance.musicPlaybackController = null;
+            }
+        }
+
+        public int GetSampleTimeForClip(string clipName)
+        {
+            var playingInfo = GetPlayingInfo(clipName);
+
+            if (playingInfo != null)
+            {
+                var player = playingInfo.Players.Find(p => p.clip.name == clipName);
+
+                if (player != null)
+                {
+                    return player.timeSamples;
+                }
+            }
+
+            return 0;
+        }
+
+        public int GetTotalSampleTimeForClip(string clipName)
+        {
+            var playingInfo = GetPlayingInfo(clipName);
+
+            if (playingInfo != null)
+            {
+                var player = playingInfo.Players.Find(p => p.clip.name == clipName);
+
+                if (player != null)
+                {
+                    return player.clip.samples;
+                }
+            }
+
+            return 0;
+        }
+
+        public bool GetIsPlaying(string clipName)
+        {
+            var playingInfo = GetPlayingInfo(clipName);
+
+            if (playingInfo != null)
+            {
+                var player = playingInfo.Players.Find(p => p.clip.name == clipName);
+
+                if (player != null)
+                {
+                    return player.isPlaying;
+                }
+            }
+
+            return false;
+        }
+
+        public float GetPitch(string clipName)
+        {
+            var playingInfo = GetPlayingInfo(clipName);
+
+            if (playingInfo != null)
+            {
+                var player = playingInfo.Players.Find(p => p.clip.name == clipName);
+
+                if (player != null)
+                {
+                    return player.pitch;
+                }
+            }
+
+            return 1f;
+        }
+
+        public string GetCurrentClipName()
+        {
+            var playingInfo = GetFirstPlayingInfo();
+
+            if (playingInfo != null && playingInfo.Players.Count > 0)
+            {
+                var player = playingInfo.Players[0];
+
+                if (player != null)
+                {
+                    return player.clip.name;
+                }
+            }
+            
+            return null;
+        }
+
+        private static PlayingMusicInfo GetFirstPlayingInfo()
+        {
+            var musicNode = TreeWalker.FindFirst<InMusicNode>(InAudioInstanceFinder.DataManager.MusicTree, node =>
+            {
+                var musicGroup = node as InMusicGroup;
+                return musicGroup != null;
+            });
+
+            return musicNode.PlayingInfo;
+        }
+
+        private static PlayingMusicInfo GetPlayingInfo(string clipName)
+        {
+            var musicGroup = GetGroup(clipName);
+            return musicGroup != null ? musicGroup.PlayingInfo : null;
+        }
+
+        public static InMusicGroup GetGroup(string clipName)
+        {
+            var musicNode = TreeWalker.FindFirst<InMusicNode>(InAudioInstanceFinder.DataManager.MusicTree, node =>
+            {
+                var musicGroup = node as InMusicGroup;
+                return musicGroup != null && musicGroup._clips.Find(clip => clip.name == clipName);
+            });
+
+            return musicNode as InMusicGroup;
         }
 
         #endregion
