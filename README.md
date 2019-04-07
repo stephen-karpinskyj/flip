@@ -1,2 +1,3 @@
-# flip
-Competitive tile-based board game
+# Beat
+
+Rhythmic, board-tapping snake-like.
