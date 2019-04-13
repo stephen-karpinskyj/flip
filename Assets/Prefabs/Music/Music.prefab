@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4000012865290952}
   - component: {fileID: 114000013937696634}
   - component: {fileID: 114000011764585146}
-  - component: {fileID: 114000011189665186}
+  - component: {fileID: 114686229931620050}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -42,18 +42,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114000011189665186
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012947298638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6f10eefad934460b49cb2ac232b7ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  song: {fileID: 11400000, guid: 5f2dae6cb49e0474a8b2735d2e08fa54, type: 2}
 --- !u!114 &114000011764585146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -83,3 +71,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba06aeba1380244f8ac527ad59481b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114686229931620050
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012947298638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd119e823087247a783e8a36780b2c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  song: {fileID: 11400000, guid: 5f2dae6cb49e0474a8b2735d2e08fa54, type: 2}

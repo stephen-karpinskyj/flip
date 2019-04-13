@@ -498,7 +498,11 @@ namespace InAudioSystem
                 player.loop = toPlay._loop;
                 player.timeSamples = skipSamples;
                 player.outputAudioMixerGroup = mixer;
+#if UNITY_WEBGL
+                player.Play(0); // SK: HACK: Workaround for https://issuetracker.unity3d.com/issues/playschedule-does-not-loop-audio-in-webgl-build
+#else
                 player.PlayScheduled(playTime);
+#endif
 
                 // SK: Koreographer integration
                 var visor = player.GetComponent<SonicBloom.Koreo.Players.AudioSourceVisor>();
@@ -635,10 +639,10 @@ namespace InAudioSystem
             }
         }
 
-        #endregion
+#endregion
 
 
-        #region SK: Koreographer integration
+#region SK: Koreographer integration
 
         private void OnEnable()
         {
@@ -766,7 +770,7 @@ namespace InAudioSystem
             return musicNode as InMusicGroup;
         }
 
-        #endregion
+#endregion
     }
 
 
