@@ -63,6 +63,8 @@ MonoBehaviour:
     mEndSample: 2416835
   _SerializedPayloadTypes:
   - SonicBloom.Koreo.CurvePayload
+  _AssetPayloads: []
+  _AssetPayloadIdxs: 
   _ColorPayloads: []
   _ColorPayloadIdxs: 
   _CurvePayloads:
@@ -433,5 +435,7 @@ MonoBehaviour:
   _GradientPayloadIdxs: 
   _IntPayloads: []
   _IntPayloadIdxs: 
+  _SpectrumPayloads: []
+  _SpectrumPayloadIdxs: 
   _TextPayloads: []
   _TextPayloadIdxs: 

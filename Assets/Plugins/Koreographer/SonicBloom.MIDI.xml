@@ -248,7 +248,7 @@
             A representation of a Note.
             </summary>
         </member>
-        <member name="F:SonicBloom.MIDI.Objects.Note.time">
+        <member name="F:SonicBloom.MIDI.Objects.Note.startTime">
             <summary>
             The time in ticks.
             </summary>

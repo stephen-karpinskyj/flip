@@ -450,7 +450,7 @@ namespace InAudioSystem.ExtensionMethods
         {
             if (unityEvent == null)
                 return false;
-            return Event.current.type == EventType.keyDown && Event.current.keyCode == code;
+            return Event.current.type == EventType.KeyDown && Event.current.keyCode == code;
         }
     }
 

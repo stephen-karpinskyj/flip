@@ -298,6 +298,8 @@ MonoBehaviour:
   - mStartSample: 2398328
     mEndSample: 2406400
   _SerializedPayloadTypes: []
+  _AssetPayloads: []
+  _AssetPayloadIdxs: 
   _ColorPayloads: []
   _ColorPayloadIdxs: 
   _CurvePayloads: []
@@ -308,5 +310,7 @@ MonoBehaviour:
   _GradientPayloadIdxs: 
   _IntPayloads: []
   _IntPayloadIdxs: 
+  _SpectrumPayloads: []
+  _SpectrumPayloadIdxs: 
   _TextPayloads: []
   _TextPayloadIdxs: 
